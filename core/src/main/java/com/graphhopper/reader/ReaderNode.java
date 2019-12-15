@@ -28,12 +28,14 @@ import com.graphhopper.util.PointAccess;
 public class ReaderNode extends ReaderElement {
     private final double lat;
     private final double lon;
+    private final double level;
 
     public ReaderNode(long id, PointAccess pointAccess, int accessId) {
         super(id, NODE);
 
         this.lat = pointAccess.getLatitude(accessId);
         this.lon = pointAccess.getLongitude(accessId);
+        this.level = 0.0;
         if (pointAccess.is3D())
             setTag("ele", pointAccess.getElevation(accessId));
     }
@@ -43,6 +45,15 @@ public class ReaderNode extends ReaderElement {
 
         this.lat = lat;
         this.lon = lon;
+        this.level = 0.0;
+    }
+
+    public ReaderNode(long id, double lat, double lon, double level) {
+        super(id, NODE);
+
+        this.lat = lat;
+        this.lon = lon;
+        this.level = level;
     }
 
     public double getLat() {
@@ -51,6 +62,10 @@ public class ReaderNode extends ReaderElement {
 
     public double getLon() {
         return lon;
+    }
+
+    public double getLevel() {
+        return level;
     }
 
     public double getEle() {
