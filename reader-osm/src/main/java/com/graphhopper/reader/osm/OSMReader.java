@@ -262,7 +262,9 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
             while ((item = in.getNext()) != null) {
                 switch (item.getType()) {
                     case ReaderElement.NODE:
+                        LOGGER.debug("writeOsmToGraph - working on " + item.getId());
                         if (nodeFilter.get(item.getId()) != EMPTY_NODE) {
+                            LOGGER.debug("writeOsmToGraph - " + item.getId() + " is within nodefilter");
                             processNode((ReaderNode) item);
                         }
                         break;
@@ -497,7 +499,8 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
     }
 
     boolean addNode(ReaderNode node) {
-        int nodeType = getNodeMap().get(node.getId());
+        LongIntMap nodeMap = getNodeMap();
+        int nodeType = nodeMap.get(node.getId());
         if (nodeType == EMPTY_NODE)
             return false;
 
@@ -506,14 +509,14 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
         double ele = getElevation(node);
         double level = node.getLevel();
 
-        System.out.println("Handling node " + node.getId() + " with coordinates " + lat + ", " + lon + ", " + level + "(lat, lon. level)");
+        LOGGER.debug("Adding node " + node.getId() + " with coordinates " + lat + ", " + lon + ", " + level + " (lat, lon. level)");
 
         if (nodeType == TOWER_NODE) {
             addTowerNode(node.getId(), lat, lon, ele);
         } else if (nodeType == PILLAR_NODE) {
             pillarInfo.setNode(nextPillarId, lat, lon, ele);
             getNodeMap().put(node.getId(), nextPillarId + 3);
-            System.out.println("Node " + node.getId() + " is a new pillar node.");
+            LOGGER.debug("Node " + node.getId() + " is a new pillar node.");
             nextPillarId++;
         }
         return true;
