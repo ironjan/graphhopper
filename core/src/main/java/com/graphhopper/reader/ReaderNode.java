@@ -28,14 +28,18 @@ import com.graphhopper.util.PointAccess;
 public class ReaderNode extends ReaderElement {
     private final double lat;
     private final double lon;
-    private final double level;
+
+    private final double GROUND_LEVEL = 0.0;
+    /**
+     * The level this node is on. Used for indoor routing. Defaults to {@see GROUND_LEVEL}
+     */
+    private double level = GROUND_LEVEL;
 
     public ReaderNode(long id, PointAccess pointAccess, int accessId) {
         super(id, NODE);
 
         this.lat = pointAccess.getLatitude(accessId);
         this.lon = pointAccess.getLongitude(accessId);
-        this.level = 0.0;
         if (pointAccess.is3D())
             setTag("ele", pointAccess.getElevation(accessId));
     }
@@ -47,7 +51,7 @@ public class ReaderNode extends ReaderElement {
         this.lon = lon;
 
         // default to ground level
-        this.level = 0.0;
+        this.level = GROUND_LEVEL;
     }
 
     public ReaderNode(long id, double lat, double lon, double level) {
@@ -97,7 +101,25 @@ public class ReaderNode extends ReaderElement {
                 // force cast
                 value = ((Number) value).doubleValue();
         }
+        if("level".equals(name)) {
+            setLevelFromTagValue(value);
+        }
         super.setTag(name, value);
+    }
+
+    private void setLevelFromTagValue(Object value) {
+        if(value instanceof String) {
+            try {
+                String str = (String) value;
+                double parsedLevel = Double.parseDouble(str);
+                setLevel(parsedLevel);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+    }
+
+    private void setLevel(double level) {
+        this.level = level;
     }
 
     @Override
@@ -109,6 +131,8 @@ public class ReaderNode extends ReaderElement {
         txt.append(getLat());
         txt.append(" lon=");
         txt.append(getLon());
+        txt.append(" lvl=");
+        txt.append(getLevel());
         if (!getTags().isEmpty()) {
             txt.append("\n");
             txt.append(tagsToString());
