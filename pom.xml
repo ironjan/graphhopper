@@ -89,6 +89,7 @@
         <module>web-api</module>
         <module>web</module>
         <module>client-hc</module>
+        <module>indoor-testing</module>
     </modules>
     <build>
         <plugins>
