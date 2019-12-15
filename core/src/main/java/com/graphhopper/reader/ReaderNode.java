@@ -45,6 +45,8 @@ public class ReaderNode extends ReaderElement {
 
         this.lat = lat;
         this.lon = lon;
+
+        // default to ground level
         this.level = 0.0;
     }
 
