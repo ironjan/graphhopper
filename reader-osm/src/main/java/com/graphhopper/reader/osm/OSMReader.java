@@ -504,11 +504,16 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
         double lat = node.getLat();
         double lon = node.getLon();
         double ele = getElevation(node);
+        double level = node.getLevel();
+
+        System.out.println("Handling node " + node.getId() + " with coordinates " + lat + ", " + lon + ", " + level + "(lat, lon. level)");
+
         if (nodeType == TOWER_NODE) {
             addTowerNode(node.getId(), lat, lon, ele);
         } else if (nodeType == PILLAR_NODE) {
             pillarInfo.setNode(nextPillarId, lat, lon, ele);
             getNodeMap().put(node.getId(), nextPillarId + 3);
+            System.out.println("Node " + node.getId() + " is a new pillar node.");
             nextPillarId++;
         }
         return true;
