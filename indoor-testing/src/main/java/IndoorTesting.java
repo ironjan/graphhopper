@@ -42,6 +42,7 @@ public class IndoorTesting {
 
         // where to store graphhopper files?
         hopper.setGraphHopperLocation(args[1]);
+        hopper.setElevation(true);
         EncodingManager foot = EncodingManager.create("foot");
         hopper.setEncodingManager(foot);
 
@@ -80,15 +81,17 @@ public class IndoorTesting {
         path.forEveryEdge(new Path.EdgeVisitor() {
             @Override
             public void next(EdgeIteratorState edge, int index, int prevEdgeId) {
-                LOGGER.debug("ITerating over edge #" + index);
+                LOGGER.debug("Iterating over edge #" + index);
                 double latitude = baseGraph.getNodeAccess().getLatitude(edge.getBaseNode());
                 double longitude = baseGraph.getNodeAccess().getLongitude(edge.getBaseNode());
 
                 double latitude2 = baseGraph.getNodeAccess().getLatitude(edge.getAdjNode());
                 double longitude2 = baseGraph.getNodeAccess().getLongitude(edge.getAdjNode());
 
+                double ele1 = baseGraph.getNodeAccess().getElevation(edge.getBaseNode());
+                double ele2 = baseGraph.getNodeAccess().getElevation(edge.getAdjNode());
 
-                LOGGER.debug("("+latitude+", "+longitude+") -> ("+latitude2+", "+longitude2+")");
+                LOGGER.debug("("+latitude+", "+longitude+", " + ele1 +") -> ("+latitude2+", "+longitude2+", " + ele2+")");
             }
 
             @Override
@@ -96,6 +99,19 @@ public class IndoorTesting {
 
             }
         });
+
+
+        LOGGER.debug("");
+        NodeAccess allNodes = baseGraph.getNodeAccess();
+        for(int i=0; i<baseGraph.getNodes(); i++) {
+            double latitude = allNodes.getLatitude(i);
+            double longitude = allNodes.getLongitude(i);
+            double ele = allNodes.getElevation(i);
+
+            if(ele != 0.0) {
+                LOGGER.debug("Node {}: {}, {}, {} (lat, lon, ele)", i, latitude, longitude, ele);
+            }
+        }
 //path.calcEdges().forEach(new Consumer<EdgeIteratorState>() {
 //    @Override
 //    public void accept(EdgeIteratorState edgeIteratorState) {

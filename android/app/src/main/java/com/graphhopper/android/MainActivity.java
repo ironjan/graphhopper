@@ -136,6 +136,8 @@ public class MainActivity extends Activity {
         if (!mapsFolder.exists())
             mapsFolder.mkdirs();
 
+        
+
         TextView welcome = (TextView) findViewById(R.id.welcome);
         welcome.setText("Welcome to GraphHopper " + Constants.VERSION + "!");
         welcome.setPadding(6, 3, 3, 3);
