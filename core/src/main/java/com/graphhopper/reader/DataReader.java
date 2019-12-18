@@ -18,11 +18,12 @@
 package com.graphhopper.reader;
 
 import com.graphhopper.reader.dem.ElevationProvider;
-import com.graphhopper.routing.util.EncodingManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Peter Karich
@@ -48,4 +49,6 @@ public interface DataReader {
      * found.
      */
     Date getDataDate();
+
+    Map<Double, List<Long>> getLevelToNodeIdMap();
 }

@@ -113,6 +113,23 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
     private boolean createStorage = true;
     private final IntsRef tempRelFlags;
     private final TurnCostStorage tcs;
+    private Map<Double, List<Long>> levelToNodeIdMap = new HashMap<>();
+
+    public Map<Double, List<Long>> getLevelToNodeIdMap() {
+        return levelToNodeIdMap;
+    }
+
+    private void addTo(Double lvl, long id){
+        List<Long> ids;
+        if(levelToNodeIdMap.containsKey(lvl)) {
+            ids = levelToNodeIdMap.get(lvl);
+        }else {
+            ids = new ArrayList<>();
+        }
+        ids.add(id);
+        levelToNodeIdMap.put(lvl, ids);
+        LOGGER.debug("Currently {} nodes known on level {}.", ids.size(), lvl);
+    }
 
     public OSMReader(GraphHopperStorage ghStorage) {
         this.ghStorage = ghStorage;
@@ -490,6 +507,9 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
                 long nodeFlags = encodingManager.handleNodeTags(node);
                 if (nodeFlags != 0)
                     getNodeFlagsMap().put(node.getId(), nodeFlags);
+
+                double level = node.getLevel();
+                addTo(level,  node.getId());
             }
 
             locations++;
@@ -509,7 +529,7 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
         double ele = getElevation(node);
         double level = node.getLevel();
 
-        LOGGER.debug("Adding node {} with coordinates {}, {}, {}, {} (lat, lon. level, ele) [will use level for elevation]", node.getId(), lat, lon, level, ele);
+        LOGGER.debug("Adding node {} with coordinates {}, {}, {}, {} (lat, lon. level, ele) [Using level as elevation]", node.getId(), lat, lon, level, ele);
 
         if (nodeType == TOWER_NODE) {
             addTowerNode(node.getId(), lat, lon, level);

@@ -128,6 +128,11 @@ public class GraphHopper implements GraphHopperAPI {
     private TagParserFactory tagParserFactory = new DefaultTagParserFactory();
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private PathDetailsBuilderFactory pathBuilderFactory = new PathDetailsBuilderFactory();
+    private Map<Double, List<Long>> levelToNodeIdMap = new HashMap<>();
+
+    public Map<Double, List<Long>> getLevelToNodeIdMap() {
+        return levelToNodeIdMap;
+    }
 
     public GraphHopper() {
         chFactoryDecorator.setEnabled(true);
@@ -669,6 +674,8 @@ public class GraphHopper implements GraphHopperAPI {
             ghStorage.getProperties().put("datareader.import.date", f.format(new Date()));
             if (reader.getDataDate() != null)
                 ghStorage.getProperties().put("datareader.data.date", f.format(reader.getDataDate()));
+
+            this.levelToNodeIdMap = reader.getLevelToNodeIdMap();
         } catch (IOException ex) {
             throw new RuntimeException("Cannot read file " + getDataReaderFile(), ex);
         }
@@ -686,6 +693,7 @@ public class GraphHopper implements GraphHopperAPI {
         DataReader reader = createReader(ghStorage);
         logger.info("using " + ghStorage.toString() + ", memory:" + getMemInfo());
         reader.readGraph();
+        this.levelToNodeIdMap = reader.getLevelToNodeIdMap();
         return reader;
     }
 

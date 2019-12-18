@@ -1,5 +1,4 @@
 
-import com.graphhopper.GHRequest;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.reader.osm.GraphHopperOSM;
 import com.graphhopper.routing.Dijkstra;
@@ -7,11 +6,8 @@ import com.graphhopper.routing.Path;
 import com.graphhopper.routing.querygraph.QueryGraph;
 import com.graphhopper.routing.util.*;
 import com.graphhopper.routing.weighting.ShortestWeighting;
-import com.graphhopper.routing.weighting.TurnWeighting;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.storage.Graph;
-import com.graphhopper.storage.GraphBuilder;
-import com.graphhopper.storage.GraphStorage;
 import com.graphhopper.storage.NodeAccess;
 import com.graphhopper.storage.index.LocationIndex;
 import com.graphhopper.storage.index.QueryResult;
@@ -20,14 +16,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.function.Consumer;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class IndoorTesting {
 
     private static Logger LOGGER;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (args.length < 2) {
             System.out.println("Usage: IndoorTesting <input.osm> <gh-folder>");
             System.exit(1);
@@ -72,12 +72,37 @@ public class IndoorTesting {
 
 
         final Graph baseGraph = hopper.getGraphHopperStorage().getBaseGraph();
+
+
+
+        LOGGER.debug("Nodes by level:");
+
+        Map<Double, List<Long>> levelToNodeIdMap = hopper.getLevelToNodeIdMap();
+        for (Double lvl : levelToNodeIdMap.keySet()) {
+            List<Long> ids = levelToNodeIdMap.get(lvl);
+
+
+            String s = ids.stream().map(new Function<Long, String>() {
+                @Override
+                public String apply(Long aLong) {
+                    return aLong.toString();
+                }
+            }).collect(Collectors.joining(", "));
+
+            LOGGER.debug("Got {} nodes on level {}: {}.", ids.size(), lvl,s );
+        }
+
+
+
         Weighting encoder = new ShortestWeighting(hopper.getEncodingManager().getEncoder("foot"));
         TraversalMode traversalMode = TraversalMode.NODE_BASED;
 
+        int startNodeId = 1531495582;
+        int endNodeId = 1531495582;
 
-        Path path = new Dijkstra(baseGraph, encoder, traversalMode).calcPath(0,145);
-        LOGGER.debug("PAth: "+ path);
+
+        Path path = new Dijkstra(baseGraph, encoder, traversalMode).calcPath(startNodeId,endNodeId);
+        LOGGER.debug("Path from {} to {}: {}", startNodeId, endNodeId,  path);
         path.forEveryEdge(new Path.EdgeVisitor() {
             @Override
             public void next(EdgeIteratorState edge, int index, int prevEdgeId) {
@@ -91,7 +116,8 @@ public class IndoorTesting {
                 double ele1 = baseGraph.getNodeAccess().getElevation(edge.getBaseNode());
                 double ele2 = baseGraph.getNodeAccess().getElevation(edge.getAdjNode());
 
-                LOGGER.debug("("+latitude+", "+longitude+", " + ele1 +") -> ("+latitude2+", "+longitude2+", " + ele2+")");
+
+                LOGGER.debug("("+latitude+"/"+longitude+", " + ele1 +") -> ("+latitude2+"/"+longitude2+", " + ele2+") via " + edge.getName());
             }
 
             @Override
@@ -101,8 +127,12 @@ public class IndoorTesting {
         });
 
 
-        LOGGER.debug("");
+
+        System.exit(0);
+
+        LOGGER.debug("Some nodes with ele!=0");
         NodeAccess allNodes = baseGraph.getNodeAccess();
+
         for(int i=0; i<baseGraph.getNodes(); i++) {
             double latitude = allNodes.getLatitude(i);
             double longitude = allNodes.getLongitude(i);
@@ -111,6 +141,12 @@ public class IndoorTesting {
             if(ele != 0.0) {
                 LOGGER.debug("Node {}: {}, {}, {} (lat, lon, ele)", i, latitude, longitude, ele);
             }
+        }
+
+
+        for (int i=-10; i<2; i++){
+            int count = countNodesBetweenElevation(baseGraph, i-0.4, i+0.50);
+            LOGGER.debug("There are {} on level ~{}.", count, i);
         }
 //path.calcEdges().forEach(new Consumer<EdgeIteratorState>() {
 //    @Override
@@ -161,6 +197,23 @@ public class IndoorTesting {
 //
 //// or get the result as gpx entries:
 //        List<GPXEntry> list = il.createGPXList();
+    }
+
+    private static int countNodesBetweenElevation(Graph graph, double eleMin, double eleMax) {
+        return findNodesBetweenElevations(graph, eleMin, eleMax).size();
+    }
+    private static List<Integer> findNodesBetweenElevations(Graph graph, double eleMin, double eleMax) {
+        NodeAccess nodeAccess = graph.getNodeAccess();
+        List<Integer> foundNodeIds = new ArrayList<>();
+
+        for(int i=0; i<graph.getNodes(); i++) {
+            double ele = nodeAccess.getElevation(i);
+            if(eleMin <= ele && ele <= eleMax) {
+                foundNodeIds.add(i);
+            }
+        }
+
+        return foundNodeIds;
     }
 
 

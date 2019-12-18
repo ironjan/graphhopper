@@ -17,6 +17,9 @@
  */
 package com.graphhopper;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Wrapper of the graphhopper online or offline API. Provides read only access.
  * <p>
@@ -40,4 +43,6 @@ public interface GraphHopperAPI {
      * @return the response with the route and possible errors
      */
     GHResponse route(GHRequest request);
+
+    Map<Double, List<Long>> getLevelToNodeIdMap();
 }
