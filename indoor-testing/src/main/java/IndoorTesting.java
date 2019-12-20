@@ -1,5 +1,8 @@
 
+import com.graphhopper.GHRequest;
+import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
+import com.graphhopper.PathWrapper;
 import com.graphhopper.reader.osm.GraphHopperOSM;
 import com.graphhopper.routing.Dijkstra;
 import com.graphhopper.routing.Path;
@@ -12,6 +15,9 @@ import com.graphhopper.storage.NodeAccess;
 import com.graphhopper.storage.index.LocationIndex;
 import com.graphhopper.storage.index.QueryResult;
 import com.graphhopper.util.EdgeIteratorState;
+import com.graphhopper.util.Instruction;
+import com.graphhopper.util.InstructionList;
+import com.graphhopper.util.PointList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -97,12 +104,12 @@ public class IndoorTesting {
         Weighting encoder = new ShortestWeighting(hopper.getEncodingManager().getEncoder("foot"));
         TraversalMode traversalMode = TraversalMode.NODE_BASED;
 
-        int startNodeId = 1531495582;
-        int endNodeId = 1531495582;
+        int startEdge = 1531495582;
+        int endEdge = 1531495582;
 
 
-        Path path = new Dijkstra(baseGraph, encoder, traversalMode).calcPath(startNodeId,endNodeId);
-        LOGGER.debug("Path from {} to {}: {}", startNodeId, endNodeId,  path);
+        Path path = new Dijkstra(baseGraph, encoder, traversalMode).calcPath(startEdge,endEdge);
+        LOGGER.debug("Path from {} to {}: {}", startEdge, endEdge,  path);
         path.forEveryEdge(new Path.EdgeVisitor() {
             @Override
             public void next(EdgeIteratorState edge, int index, int prevEdgeId) {
@@ -127,7 +134,27 @@ public class IndoorTesting {
         });
 
 
+        LOGGER.debug("Stachus-Test:");
 
+                GHRequest req = new GHRequest(48.138034,11.564822, 48.138961, 11.566485).
+                setWeighting("fastest").
+                setVehicle("foot").
+                setLocale("de-DE");
+        GHResponse rsp = hopper.route(req);
+
+        // use the best path, see the GHResponse class for more possibilities.
+        PathWrapper bestPath = rsp.getBest();
+
+// points, distance in meters and time in millis of the full path
+        PointList pointList = bestPath.getPoints();
+        double distance = bestPath.getDistance();
+        long timeInMs = bestPath.getTime();
+
+        InstructionList il = bestPath.getInstructions();
+// iterate over every turn instruction
+        for(Instruction instruction : il) {
+            LOGGER.debug("{}", instruction);
+        }
         System.exit(0);
 
         LOGGER.debug("Some nodes with ele!=0");
