@@ -27,6 +27,7 @@ import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
+import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.Constants;
 import com.graphhopper.util.Helper;
 import com.graphhopper.util.Parameters.Algorithms;
@@ -34,6 +35,7 @@ import com.graphhopper.util.Parameters.Routing;
 import com.graphhopper.util.PointList;
 import com.graphhopper.util.ProgressListener;
 import com.graphhopper.util.StopWatch;
+import com.graphhopper.util.Unzipper;
 
 import org.oscim.android.MapView;
 import org.oscim.android.canvas.AndroidGraphics;
@@ -53,9 +55,15 @@ import org.oscim.layers.vector.PathLayer;
 import org.oscim.layers.vector.geometries.Style;
 import org.oscim.theme.VtmThemes;
 import org.oscim.tiling.source.mapfile.MapFileTileSource;
+import org.oscim.tiling.source.mapfile.MapInfo;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -120,6 +128,7 @@ public class MainActivity extends Activity {
 
         mapView = new MapView(this);
 
+
         final EditText input = new EditText(this);
         input.setText(currentArea);
         boolean greaterOrEqKitkat = Build.VERSION.SDK_INT >= 19;
@@ -147,8 +156,35 @@ public class MainActivity extends Activity {
         remoteButton = (Button) findViewById(R.id.remote_button);
         // TODO get user confirmation to download
         // if (AndroidHelper.isFastDownload(this))
+
+        // TODO check remote for updates and stuff
+//        try {
+//            copyGhzToLocal();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
         chooseAreaFromRemote();
         chooseAreaFromLocal();
+    }
+
+    private void copyGhzToLocal() throws IOException {
+        String localFolder = new File(mapsFolder, "m_hbf_stachus_plazaroute" + "-gh").getAbsolutePath();
+        InputStream in = getResources().openRawResource(R.raw.m_hbf_stachus_plazaroute);
+
+        try {
+            (new Unzipper()).unzip(in, new File(localFolder), new ProgressListener() {
+                public void update(long sumBytes) {
+                    Log.d("MainActivity", sumBytes + " bytes copied and unzipped.");
+                }
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            in.close();
+        }
+
     }
 
     @Override
@@ -359,7 +395,8 @@ public class MainActivity extends Activity {
 
         // Map file source
         MapFileTileSource tileSource = new MapFileTileSource();
-        tileSource.setMapFile(new File(areaFolder, currentArea + ".map").getAbsolutePath());
+        String child = currentArea + ".map";
+        tileSource.setMapFile(new File(areaFolder, child).getAbsolutePath());
         VectorTileLayer l = mapView.map().setBaseMap(tileSource);
         mapView.map().setTheme(VtmThemes.DEFAULT);
         mapView.map().layers().add(new BuildingLayer(mapView.map(), l));
@@ -370,8 +407,9 @@ public class MainActivity extends Activity {
         mapView.map().layers().add(itemizedLayer);
 
         // Map position
-        GeoPoint mapCenter = tileSource.getMapInfo().boundingBox.getCenterPoint();
-        mapView.map().setMapPosition(mapCenter.getLatitude(), mapCenter.getLongitude(), 1 << 15);
+        MapInfo mapInfo = tileSource.getMapInfo();
+        GeoPoint mapCenter = mapInfo.boundingBox.getCenterPoint();
+        mapView.map().setMapPosition(48.13941,11.56550, 16384); // 2^14 == 1<<15
 
         setContentView(mapView);
         loadGraphStorage();
@@ -382,6 +420,9 @@ public class MainActivity extends Activity {
         new GHAsyncTask<Void, Void, Path>() {
             protected Path saveDoInBackground(Void... v) throws Exception {
                 GraphHopper tmpHopp = new GraphHopper().forMobile();
+                tmpHopp.setElevation(true);
+                EncodingManager foot = EncodingManager.create("foot");
+                tmpHopp.setEncodingManager(foot);
                 tmpHopp.load(new File(mapsFolder, currentArea).getAbsolutePath() + "-gh");
                 log("found graph " + tmpHopp.getGraphHopperStorage().toString() + ", nodes:" + tmpHopp.getGraphHopperStorage().getNodes());
                 hopper = tmpHopp;
