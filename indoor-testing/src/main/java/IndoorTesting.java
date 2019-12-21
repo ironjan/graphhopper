@@ -4,6 +4,7 @@ import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import com.graphhopper.reader.osm.GraphHopperOSM;
+import com.graphhopper.routing.AStar;
 import com.graphhopper.routing.Dijkstra;
 import com.graphhopper.routing.Path;
 import com.graphhopper.routing.querygraph.QueryGraph;
@@ -23,22 +24,20 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class IndoorTesting {
 
-    private static Logger LOGGER;
+    private static Logger LOGGER = LoggerFactory.getLogger(IndoorTesting.class);
 
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
             System.out.println("Usage: IndoorTesting <input.osm> <gh-folder>");
             System.exit(1);
         }
+
 
 
         deleteDirectory(new File(args[1]));
@@ -60,6 +59,8 @@ public class IndoorTesting {
 //        GraphBuilder gb = new GraphBuilder(em).setLocation("graphhopper_folder").setStore(true);
 
 
+        Map<Double, List<Long>> levelToNodeIdMap1 = foo(hopper, hopper.getGraphHopperStorage().getBaseGraph(), foot);
+
 
         // fixme location index does not have floors
         LocationIndex index = hopper.getLocationIndex();
@@ -71,12 +72,20 @@ public class IndoorTesting {
         double lat3 = 48.1390981, lon3 = 11.5653542, level3= 0.0;
 
         // todo use foot filter instead
+        EdgeFilter mEdgeFilter = new EdgeFilter() {
+
+            @Override
+            public boolean accept(EdgeIteratorState edgeState) {
+                return false;
+            }
+        };
         QueryResult qr1 = index.findClosest(lat1, lon1, EdgeFilter.ALL_EDGES);
         int closestNode = qr1.getClosestNode();
         final NodeAccess nodeAccess = QueryGraph.lookup(hopper.getGraphHopperStorage(), qr1).getNodeAccess();
-        LOGGER = LoggerFactory.getLogger(IndoorTesting.class);
         LOGGER.debug("Node access 1: " + nodeAccess.getLatitude(closestNode) + ", " + nodeAccess.getLongitude(closestNode));
 
+
+        System.exit(0);
 
         final Graph baseGraph = hopper.getGraphHopperStorage().getBaseGraph();
 
@@ -84,7 +93,7 @@ public class IndoorTesting {
 
         LOGGER.debug("Nodes by level:");
 
-        Map<Double, List<Long>> levelToNodeIdMap = hopper.getLevelToNodeIdMap();
+        Map<Double, List<Long>> levelToNodeIdMap = levelToNodeIdMap1;
         for (Double lvl : levelToNodeIdMap.keySet()) {
             List<Long> ids = levelToNodeIdMap.get(lvl);
 
@@ -224,6 +233,56 @@ public class IndoorTesting {
 //
 //// or get the result as gpx entries:
 //        List<GPXEntry> list = il.createGPXList();
+    }
+
+    private static Map<Double, List<Long>> foo(GraphHopper hopper, Graph baseGraph, EncodingManager foot) {
+        NodeAccess nodeAccess1 = hopper.getGraphHopperStorage().getNodeAccess();
+        int maxn = hopper.getGraphHopperStorage().getNodes();
+        Map<Double, List<Long>> levelToNodeIdMap1 = hopper.getLevelToNodeIdMap();
+        Map<Long, Double> idToLevel = new HashMap<>(maxn);
+
+        for (Double lvl: levelToNodeIdMap1.keySet()) {
+            List<Long> lvlNodes = levelToNodeIdMap1.get(lvl);
+            for(Long id: lvlNodes) {
+                idToLevel.put(id, lvl);
+            }
+        }
+
+        int l2Index = 0;
+        int lM1Index = 0;
+        List<Long> l2Nodes = levelToNodeIdMap1.get(2.0);
+        List<Long> lm1Nodes = levelToNodeIdMap1.get(-1.0);
+
+        for (Long i: l2Nodes) {
+            for(Long j: lm1Nodes) {
+                bar(baseGraph, foot, i.intValue(), j.intValue(), l2Nodes, lm1Nodes);
+            }
+        }
+        return levelToNodeIdMap1;
+    }
+
+    private static void bar(Graph baseGraph, EncodingManager foot, int l2Index, int lM1Index, List<Long> l2Nodes, List<Long> lm1Nodes) {
+        try{
+            Long firstLEvel2Node = l2Nodes.get(l2Index);
+        Long firstLevelMinus1Node = lm1Nodes.get(lM1Index);
+
+        AllEdgesIterator allEdges = baseGraph.getAllEdges();
+        int startEdge = firstLEvel2Node.intValue();
+        int endEdge = firstLevelMinus1Node.intValue();
+
+        ShortestWeighting weighting = new ShortestWeighting(foot.getEncoder("foot"));
+
+
+            LOGGER.debug("Computing path from {} to {} in A* and Dijkstra.", startEdge, endEdge);
+            Path aSTarPAth = new AStar(baseGraph, weighting, TraversalMode.NODE_BASED).calcPath(startEdge, endEdge);
+            Path dijkstraPath = new Dijkstra(baseGraph, weighting, TraversalMode.NODE_BASED).calcPath(startEdge,endEdge);
+
+            LOGGER.debug("Final path lengths:");
+            LOGGER.debug("{}", aSTarPAth);
+            LOGGER.debug("{}", dijkstraPath);
+        }catch (Exception e) {
+            /* ignore */
+        }
     }
 
     private static int countNodesBetweenElevation(Graph graph, double eleMin, double eleMax) {
