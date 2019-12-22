@@ -5,20 +5,18 @@ import com.graphhopper.PathWrapper;
 
 import java.util.Locale;
 
-public class LatLonRouting {
-    private GraphHopper hopper;
-
+public class LatLonRouting extends RoutingExample {
     public LatLonRouting(GraphHopper hopper) {
-        this.hopper = hopper;
+        super(hopper);
     }
 
     public PathWrapper getRoute(double fromLat, double fromLon, double toLat, double toLon) {
-
 // simple configuration of the request object, see the GraphHopperServlet classs for more possibilities.
-        GHRequest req = new GHRequest(fromLat, fromLon, toLat, toLon).
-                setWeighting("fastest").
-                setVehicle("foot").
-                setLocale(Locale.GERMAN);
+        GHRequest req = new GHRequest(fromLat, fromLon, toLat, toLon)
+//                .setWeighting("shortest")
+                .setVehicle("foot")
+                .setLocale(Locale.GERMAN);
+        String weighting = req.getWeighting();
         GHResponse rsp = hopper.route(req);
 
 

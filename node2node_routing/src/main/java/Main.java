@@ -3,8 +3,8 @@ import com.graphhopper.PathWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Node2NodeRouting {
-    private static Logger LOGGER = LoggerFactory.getLogger(Node2NodeRouting.class);
+public class Main {
+    private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
         String osmFile = args[0];
@@ -13,13 +13,14 @@ public class Node2NodeRouting {
 
 
         GraphHopper hopper = GraphLoader.get(osmFile, graphFolder);
-        new Node2NodeRouting();
+        new Main();
 
-        PathWrapper route = new LatLonRouting(hopper)
+        PathWrapper latLonRoute = new LatLonRouting(hopper)
                 .getRoute(48.140375, 11.559291, 48.139029, 11.5687);
+        PathPrinter.print(latLonRoute);
 
-        PathPrinter.print(route);
-
+        PathWrapper nodeIdRoute = new NodeIdRouting(hopper).getRoute(121, 77);
+        PathPrinter.print(nodeIdRoute);
     }
 
 
