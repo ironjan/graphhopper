@@ -47,7 +47,8 @@ public class GraphHopperOSM extends GraphHopper {
 
     @Override
     protected DataReader createReader(GraphHopperStorage ghStorage) {
-        return initDataReader(new OSMReader(ghStorage));
+        this.reader = new OSMReader(ghStorage);
+        return initDataReader(reader);
     }
 
     public String getOSMFile() {

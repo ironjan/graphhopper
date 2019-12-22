@@ -77,6 +77,7 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
     private final DistanceCalc distCalc = Helper.DIST_EARTH;
     private final DistanceCalc3D distCalc3D = Helper.DIST_3D;
     private final DouglasPeucker simplifyAlgo = new DouglasPeucker();
+    private final HashMap<Long, Integer> osmIdToGhId;
     private boolean smoothElevation = false;
     private final boolean exitOnlyPillarNodeException = true;
     private final Map<String, EdgeExplorer> outExplorerMap = new HashMap<>();
@@ -114,6 +115,9 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
     private final IntsRef tempRelFlags;
     private final TurnCostStorage tcs;
     private Map<Double, List<Long>> levelToNodeIdMap = new HashMap<>();
+    public static long StartNode = 3274849523L;
+    public static long EndNode = 3580872899L;
+
 
     public Map<Double, List<Long>> getLevelToNodeIdMap() {
         return levelToNodeIdMap;
@@ -146,6 +150,8 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
             throw new IllegalArgumentException("Cannot use relation flags with != 2 integers");
 
         tcs = graph.getTurnCostStorage();
+
+        osmIdToGhId = new HashMap<>();
     }
 
     @Override
@@ -499,6 +505,13 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
     }
 
     private void processNode(ReaderNode node) {
+
+        boolean isStartNode = StartNode == node.getId();
+        boolean isEndNode = EndNode == node.getId();
+        if(isStartNode || isEndNode) {
+            LOGGER.debug("Encountered start node? {}. Encountered end node? {}.", isStartNode, isEndNode);
+        }
+
         if (isInBounds(node)) {
             addNode(node);
 
@@ -529,15 +542,24 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
         double ele = getElevation(node);
         double level = node.getLevel();
 
+
         LOGGER.debug("Adding node {} with coordinates {}, {}, {}, {} (lat, lon. level, ele) [Using level as elevation]", node.getId(), lat, lon, level, ele);
+
+        boolean isStartNode = StartNode == node.getId();
+        boolean isEndNode = EndNode == node.getId();
 
         if (nodeType == TOWER_NODE) {
             addTowerNode(node.getId(), lat, lon, level);
+            LOGGER.debug("Node " + node.getId() + " is a new tower node.");
         } else if (nodeType == PILLAR_NODE) {
             pillarInfo.setNode(nextPillarId, lat, lon, level);
             getNodeMap().put(node.getId(), nextPillarId + 3);
             LOGGER.debug("Node " + node.getId() + " is a new pillar node.");
+            LOGGER.debug("Added new pillar node. osmid = {}, gh id = {}", node.getId(), nextPillarId);
             nextPillarId++;
+        }
+        if(isStartNode || isEndNode) {
+            LOGGER.debug("Processed start node? {}. Processed end node? {}.", isStartNode, isEndNode);
         }
         return true;
     }
@@ -593,6 +615,7 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
 
         int id = -(nextTowerId + 3);
         getNodeMap().put(osmId, id);
+        LOGGER.debug("Added new tower node. osmid = {}, gh id = {}", osmId, id);
         nextTowerId++;
         return id;
     }
@@ -798,7 +821,7 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
         pillarInfo.clear();
         encodingManager.releaseParsers();
         eleProvider.release();
-        osmNodeIdToInternalNodeMap = null;
+//        osmNodeIdToInternalNodeMap = null;
         osmNodeIdToNodeFlagsMap = null;
         osmWayIdToRouteWeightMap = null;
         osmWayIdSet = null;
@@ -920,7 +943,7 @@ public class OSMReader implements DataReader, TurnCostParser.ExternalInternalMap
     /**
      * Maps OSM IDs (long) to internal node IDs (int)
      */
-    protected LongIntMap getNodeMap() {
+    public LongIntMap getNodeMap() {
         return osmNodeIdToInternalNodeMap;
     }
 

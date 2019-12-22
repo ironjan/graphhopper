@@ -51,6 +51,9 @@ public class DefaultFlagEncoderFactory implements FlagEncoderFactory {
         if (name.equals(FOOT))
             return new FootFlagEncoder(configuration);
 
+        if (name.equals(FOOT_INDOOR))
+            return new FootIndoorFlagEncoder(configuration);
+
         if (name.equals(HIKE))
             return new HikeFlagEncoder(configuration);
 

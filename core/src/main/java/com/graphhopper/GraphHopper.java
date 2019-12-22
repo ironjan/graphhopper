@@ -17,6 +17,7 @@
  */
 package com.graphhopper;
 
+import com.graphhopper.coll.LongIntMap;
 import com.graphhopper.json.geo.JsonFeature;
 import com.graphhopper.reader.DataReader;
 import com.graphhopper.reader.dem.*;
@@ -129,6 +130,7 @@ public class GraphHopper implements GraphHopperAPI {
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private PathDetailsBuilderFactory pathBuilderFactory = new PathDetailsBuilderFactory();
     private Map<Double, List<Long>> levelToNodeIdMap = new HashMap<>();
+    protected DataReader reader;
 
     public Map<Double, List<Long>> getLevelToNodeIdMap() {
         return levelToNodeIdMap;
@@ -1322,4 +1324,14 @@ public class GraphHopper implements GraphHopperAPI {
         this.nonChMaxWaypointDistance = nonChMaxWaypointDistance;
     }
 
+    public int getGhIdOfOsmId(long osmId) {
+        if(reader != null && getNodeMap() != null) {
+            return getNodeMap().get(osmId);
+        }
+        return -1;
+    }
+
+    public LongIntMap getNodeMap() {
+        return reader.getNodeMap();
+    }
 }

@@ -34,6 +34,7 @@ public interface FlagEncoderFactory {
     String MOTORCYCLE = "motorcycle";
     String WHEELCHAIR = "wheelchair";
     String GENERIC = "generic";
+    String FOOT_INDOOR = "foot_indoor";
 
     FlagEncoder createFlagEncoder(String name, PMap configuration);
 }

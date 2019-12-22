@@ -219,6 +219,11 @@ public class GraphHopperWeb implements GraphHopperAPI {
         }
     }
 
+    @Override
+    public Map<Double, List<Long>> getLevelToNodeIdMap() {
+        return null;
+    }
+
     private OkHttpClient getClientForRequest(GHRequest request) {
         OkHttpClient client = this.downloader;
         if (request.getHints().has(TIMEOUT)) {

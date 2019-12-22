@@ -17,11 +17,13 @@
  */
 package com.graphhopper.reader;
 
+import com.graphhopper.coll.LongIntMap;
 import com.graphhopper.reader.dem.ElevationProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,4 +53,6 @@ public interface DataReader {
     Date getDataDate();
 
     Map<Double, List<Long>> getLevelToNodeIdMap();
+
+    LongIntMap getNodeMap();
 }
