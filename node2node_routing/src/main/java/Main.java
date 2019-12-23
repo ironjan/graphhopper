@@ -47,23 +47,30 @@ public class Main {
     private void runFuTest() {
         singleTest("entry-f2", 51.73210, 8.73502,51.73191690536, 8.73486839258, 0d, 2d);
         singleTest("entry-f0", 51.73210, 8.73502,51.73168,8.73467, 0d, -1d);
+        singleTest("entry-f2", 51.73210, 8.73502,51.73191690536, 8.73486839258, 0d, 2d, true);
+        singleTest("entry-f0", 51.73210, 8.73502,51.73168,8.73467, 0d, -1d, true);
     }
 
-    private void singleTest(String run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
-        LOGGER.debug("Route {} from {},{},{} to {},{},{}.", run, fromLat, fromLon, fromLvl, toLat, toLon, toLvl);
+    private void runIssueTest(){
+        singleTest("issue", 0,0,5,5,0,0);
+    }
+    private void singleTest(String run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl, boolean edgeBased) {
+        LOGGER.debug("Route {} from {},{},{} to {},{},{}. Edge based? {}", run, fromLat, fromLon, fromLvl, toLat, toLon, toLvl, edgeBased);
 
         LatLonRouting latLonRouting = new LatLonRouting(hopper);
-        LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper, false);
-        LowLevelRouting allEdgesLowLevelRouting = new LowLevelRouting(hopper, true);
+        LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper, edgeBased);
 
         PathWrapper route = latLonRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
 //        PathPrinter.printSummary("GHRequest Routing", route);
 
-        route = allEdgesLowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
 //        PathPrinter.print("FootLevel All  EF", route);
 
         route = lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
         PathPrinter.print("FootLevel LevelEF", route);
+    }
+
+    private void singleTest(String run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
+        singleTest(run, fromLat, fromLon, toLat, toLon, fromLvl, toLvl, false);
     }
 
 }

@@ -19,11 +19,11 @@ public class LowLevelRouting extends RoutingExample {
 
     private FlagEncoder encoder;
     private WrappedShortestWeighting weighting;
-    private boolean useFilter;
+    private boolean edgeBased;
 
-    public LowLevelRouting(GraphHopper hopper, boolean useFilter) {
+    public LowLevelRouting(GraphHopper hopper, boolean edgeBased) {
         super(hopper);
-        this.useFilter = useFilter;
+        this.edgeBased = edgeBased;
         encoder = GraphLoader.getEncodingManager().getEncoder("foot_level");
         weighting = new WrappedShortestWeighting(encoder);
     }
@@ -31,13 +31,8 @@ public class LowLevelRouting extends RoutingExample {
     public PathWrapper getRoute(double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
         EdgeFilter fromFilter;
         EdgeFilter toFilter;
-        if(useFilter){
-            fromFilter = EdgeFilter.ALL_EDGES;
-            toFilter = EdgeFilter.ALL_EDGES;
-        }else {
             fromFilter = new FootLevelEdgeFilter(encoder, fromLvl);
             toFilter= new FootLevelEdgeFilter(encoder, toLvl);
-        }
 
         QueryResult fromQr = hopper.getLocationIndex().findClosest(fromLat, fromLon, fromFilter);
         QueryResult toQr = hopper.getLocationIndex().findClosest(toLat, toLon, toFilter);
@@ -53,7 +48,10 @@ public class LowLevelRouting extends RoutingExample {
         QueryGraph queryGraph = QueryGraph.lookup(graph, qrs);
 
 
-        Path path = new Dijkstra(queryGraph, weighting, TraversalMode.NODE_BASED)
+        TraversalMode traversalMode = edgeBased ? TraversalMode.EDGE_BASED : TraversalMode.NODE_BASED;
+
+
+        Path path = new Dijkstra(queryGraph, weighting, traversalMode)
                 .calcPath(fromQr.getClosestNode(), toQr.getClosestNode());
 
         ArrayList<Path> paths = new ArrayList<>();
