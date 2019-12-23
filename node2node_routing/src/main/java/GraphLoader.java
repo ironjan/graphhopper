@@ -1,6 +1,9 @@
 import com.graphhopper.GraphHopper;
 import com.graphhopper.GraphHopperOsmLevelSupport;
+import com.graphhopper.routing.util.DefaultFlagEncoderFactory;
 import com.graphhopper.routing.util.EncodingManager;
+import com.graphhopper.routing.util.FlagEncoderFactoryWithLevelFootFlagEncoder;
+import com.graphhopper.routing.util.FootFlagLevelEncoder;
 
 public class GraphLoader {
     public static GraphHopper get(String osmFile, String graphFolder) {
@@ -10,7 +13,12 @@ public class GraphLoader {
         hopper.setElevation(true);
 // where to store graphhopper files?
         hopper.setGraphHopperLocation(graphFolder);
-        hopper.setEncodingManager(EncodingManager.create("foot"));
+
+
+        EncodingManager em = EncodingManager.create(new FootFlagLevelEncoder());
+//        EncodingManager em = EncodingManager.create("foot");
+
+        hopper.setEncodingManager(em);
 
 // now this can take minutes if it imports or a few seconds for loading
 // of course this is dependent on the area you import
