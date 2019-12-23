@@ -1,3 +1,5 @@
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 
 /**
@@ -6,6 +8,7 @@ import java.io.File;
 public class DirectoryDeleter {
 
     public static boolean deleteDirectory(String path){
+        LoggerFactory.getLogger(DirectoryDeleter.class).debug("Deleting {}...", path);
         return deleteDirectory(new File(path));
     }
     public static boolean deleteDirectory(File directoryToBeDeleted) {
