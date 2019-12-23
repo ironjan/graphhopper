@@ -1,5 +1,6 @@
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
+import com.graphhopper.routing.util.EdgeFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,15 +32,20 @@ public class Main {
     }
 
     private void singleTest(int run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
-        LOGGER.debug(" #{} Route from {},{} to {},{}.", run, fromLat, fromLon, toLat, toLon);
+        LOGGER.debug("Route #{} Route from {},{},{} to {},{},{}.", run, fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
 
         LatLonRouting latLonRouting = new LatLonRouting(hopper);
-        PathWrapper latLonRoute = latLonRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
-        PathPrinter.printSummary("LatLon", latLonRoute);
-
         LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper);
-        PathWrapper lowLevelRoute = lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
-        PathPrinter.printSummary("FootLevel", lowLevelRoute);
+        LowLevelRouting allEdgesLowLevelRouting = new LowLevelRouting(hopper, EdgeFilter.ALL_EDGES);
+
+        PathWrapper route = latLonRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
+        PathPrinter.printSummary("GHRequest Routing", route);
+
+        route = lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
+        PathPrinter.printSummary("FootLevel LevelEF", route);
+
+        route = allEdgesLowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
+        PathPrinter.printSummary("FootLevel All  EF", route);
     }
 
 }
