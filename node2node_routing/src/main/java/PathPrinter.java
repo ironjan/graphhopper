@@ -9,14 +9,17 @@ public class PathPrinter {
 
     private static Logger logger = LoggerFactory.getLogger(PathPrinter.class);
 
-    static void print(String router, PathWrapper path) {
-
-// points, distance in meters and time in millis of the full path
+    static void printSummary(String router, PathWrapper path) {
         if(path == null){
             logger.debug("Could not compute route with {}.", router);
             return;
         }
         logger.debug("Path from {}: {}", router, path);
+    }
+    static void print(String router, PathWrapper path) {
+
+// points, distance in meters and time in millis of the full path
+        printSummary(router,path);
         PointList pointList = path.getPoints();
         logger.debug("Pointlist: {}", pointList);
 

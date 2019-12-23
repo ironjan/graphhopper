@@ -30,6 +30,8 @@ public class LatLonRouting extends RoutingExample {
 // use the best path, see the GHResponse class for more possibilities.
         PathWrapper path = rsp.getBest();
 
+
+
         return path;
 
     }
