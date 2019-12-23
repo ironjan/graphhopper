@@ -19,11 +19,13 @@ public class FootLevelEdgeFilter implements EdgeFilter {
         this.encoder = (FootFlagLevelEncoder) encoder;
     }
 
+
     @Override
     public boolean accept(EdgeIteratorState edgeState) {
         double level = encoder.getLevelFrom(edgeState.getFlags());
 
-
-        return expectedLevel == level;
+        boolean isAccepted = expectedLevel == level;
+//        logger.debug("Edge {} accepted? {}", edgeState.getName(), isAccepted);
+        return isAccepted;
     }
 }

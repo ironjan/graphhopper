@@ -42,6 +42,9 @@ public class LowLevelRouting extends RoutingExample {
         QueryResult fromQr = hopper.getLocationIndex().findClosest(fromLat, fromLon, fromFilter);
         QueryResult toQr = hopper.getLocationIndex().findClosest(toLat, toLon, toFilter);
 
+        fromQr.isValid();
+        toQr.isValid();
+
         ArrayList<QueryResult> qrs = new ArrayList<>();
         qrs.add(fromQr);
         qrs.add(toQr);
