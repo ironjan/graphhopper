@@ -1,8 +1,6 @@
 import com.graphhopper.GraphHopper;
 import com.graphhopper.GraphHopperOsmLevelSupport;
-import com.graphhopper.routing.util.DefaultFlagEncoderFactory;
 import com.graphhopper.routing.util.EncodingManager;
-import com.graphhopper.routing.util.FlagEncoderFactoryWithLevelFootFlagEncoder;
 import com.graphhopper.routing.util.FootFlagLevelEncoder;
 
 public class GraphLoader {

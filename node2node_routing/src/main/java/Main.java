@@ -35,7 +35,11 @@ public class Main {
 
         LatLonRouting latLonRouting = new LatLonRouting(hopper);
         PathWrapper latLonRoute = latLonRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
-        PathPrinter.print(latLonRoute);
+        PathPrinter.print("LatLon", latLonRoute);
+
+        LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper);
+        PathWrapper lowLevelRoute = lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
+        PathPrinter.print("FootLevel", lowLevelRoute);
     }
 
 }

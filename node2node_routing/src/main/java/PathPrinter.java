@@ -1,22 +1,24 @@
 import com.graphhopper.PathWrapper;
-import com.graphhopper.routing.Path;
 import com.graphhopper.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.InvalidAlgorithmParameterException;
 import java.util.Locale;
 
 public class PathPrinter {
 
     private static Logger logger = LoggerFactory.getLogger(PathPrinter.class);
 
-    static void print(PathWrapper path) {
+    static void print(String router, PathWrapper path) {
 
 // points, distance in meters and time in millis of the full path
-        logger.debug("{}", path);
+        if(path == null){
+            logger.debug("Could not compute route with {}.", router);
+            return;
+        }
+        logger.debug("Path from {}: {}", router, path);
         PointList pointList = path.getPoints();
-        logger.debug("{}", pointList);
+        logger.debug("Pointlist: {}", pointList);
 
         try{
 
