@@ -17,24 +17,31 @@ import java.util.Locale;
 
 public class LowLevelRouting extends RoutingExample {
 
-    private final EdgeFilter edgeFilter;
     private FlagEncoder encoder;
     private WrappedShortestWeighting weighting;
+    private boolean useFilter;
 
     public LowLevelRouting(GraphHopper hopper, boolean useFilter) {
         super(hopper);
+        this.useFilter = useFilter;
         encoder = GraphLoader.getEncodingManager().getEncoder("foot_level");
-        if(useFilter){
-            this.edgeFilter = new FootLevelEdgeFilter(encoder);
-        }else {
-            this.edgeFilter = EdgeFilter.ALL_EDGES;
-        }
         weighting = new WrappedShortestWeighting(encoder);
     }
 
     public PathWrapper getRoute(double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
-        QueryResult fromQr = hopper.getLocationIndex().findClosest(fromLat, fromLon, edgeFilter);
-        QueryResult toQr = hopper.getLocationIndex().findClosest(toLat, toLon, edgeFilter);
+        EdgeFilter fromFilter;
+        EdgeFilter toFilter;
+        if(useFilter){
+            fromFilter = EdgeFilter.ALL_EDGES;
+            toFilter = EdgeFilter.ALL_EDGES;
+        }else {
+            fromFilter = new FootLevelEdgeFilter(encoder, fromLvl);
+            toFilter= new FootLevelEdgeFilter(encoder, toLvl);
+        }
+
+        QueryResult fromQr = hopper.getLocationIndex().findClosest(fromLat, fromLon, fromFilter);
+        QueryResult toQr = hopper.getLocationIndex().findClosest(toLat, toLon, toFilter);
+
         ArrayList<QueryResult> qrs = new ArrayList<>();
         qrs.add(fromQr);
         qrs.add(toQr);
@@ -47,7 +54,7 @@ public class LowLevelRouting extends RoutingExample {
                 .calcPath(fromQr.getClosestNode(), toQr.getClosestNode());
 
         ArrayList<Path> paths = new ArrayList<>();
-paths.add(path);
+        paths.add(path);
 
         PathWrapper pathWrapper = new PathWrapper();
         PathMerger merger = new PathMerger(graph, weighting);
