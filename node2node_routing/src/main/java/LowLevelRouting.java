@@ -21,13 +21,14 @@ public class LowLevelRouting extends RoutingExample {
     private FlagEncoder encoder;
     private WrappedShortestWeighting weighting;
 
-    public LowLevelRouting(GraphHopper hopper) {
-        this(hopper, new FootLevelEdgeFilter());
-    }
-    public LowLevelRouting(GraphHopper hopper, EdgeFilter edgeFilter) {
+    public LowLevelRouting(GraphHopper hopper, boolean useFilter) {
         super(hopper);
-        this.edgeFilter = edgeFilter;
         encoder = GraphLoader.getEncodingManager().getEncoder("foot_level");
+        if(useFilter){
+            this.edgeFilter = new FootLevelEdgeFilter(encoder);
+        }else {
+            this.edgeFilter = EdgeFilter.ALL_EDGES;
+        }
         weighting = new WrappedShortestWeighting(encoder);
     }
 
