@@ -1,7 +1,4 @@
-import com.graphhopper.GHRequest;
-import com.graphhopper.GHResponse;
-import com.graphhopper.GraphHopper;
-import com.graphhopper.PathWrapper;
+import com.graphhopper.*;
 
 import java.util.Locale;
 
@@ -11,8 +8,12 @@ public class LatLonRouting extends RoutingExample {
     }
 
     public PathWrapper getRoute(double fromLat, double fromLon, double toLat, double toLon) {
+        return getRoute(fromLat, fromLon, toLat, toLon, 0d, 0d);
+    }
+
+    public PathWrapper getRoute(double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
 // simple configuration of the request object, see the GraphHopperServlet classs for more possibilities.
-        GHRequest req = new GHRequest(fromLat, fromLon, toLat, toLon)
+        GHRequest req = new GHLevelRequest(fromLat, fromLon, toLat, toLon, Double.NaN, Double.NaN, fromLvl, toLvl)
 //                .setWeighting("shortest")
                 .setVehicle("foot")
                 .setLocale(Locale.GERMAN);
@@ -21,7 +22,7 @@ public class LatLonRouting extends RoutingExample {
 
 
 // first check for errors
-        if(rsp.hasErrors()) {
+        if (rsp.hasErrors()) {
             // handle them!
             // rsp.getErrors()
 
