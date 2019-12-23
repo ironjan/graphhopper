@@ -27,12 +27,14 @@ public class Main {
 //        singleTest(2,48.1384420, 11.5649660, 48.139029, 11.568700, 0d, 0d);
 
         // Start is exactly on top of a "Stachuspassage, 1. Untergeschoss" node
-        singleTest(3,48.1394991, 11.5659233, 48.139029, 11.568700, -0d, 0d);
-        singleTest(4,48.1394991, 11.5659233, 48.139029, 11.568700, -1d, 0d);
+        singleTest("Karlsplatz",48.1394991, 11.5659233, 48.139029, 11.568700, -0d, 0d);
+        singleTest("Stachusp-1",48.1394991, 11.5659233, 48.139029, 11.568700, -1d, 0d);
+        singleTest("Hbf      0",48.140203,11.55972, 48.138514,11.568131, 0d, 0d);
+        singleTest("hbf      1",48.140203,11.55972, 48.138514,11.568131, 1d, 0d);
     }
 
-    private void singleTest(int run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
-        LOGGER.debug("Route #{} Route from {},{},{} to {},{},{}.", run, fromLat, fromLon, fromLvl, toLon, fromLvl, toLvl);
+    private void singleTest(String run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
+        LOGGER.debug("Route {} from {},{},{} to {},{},{}.", run, fromLat, fromLon, fromLvl, toLon, fromLvl, toLvl);
 
         LatLonRouting latLonRouting = new LatLonRouting(hopper);
         LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper, false);
