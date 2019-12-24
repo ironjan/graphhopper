@@ -57,15 +57,9 @@ public class Main {
     private void singleTest(String run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl, boolean edgeBased) {
         LOGGER.debug("Route {} from {},{},{} to {},{},{}. Edge based? {}", run, fromLat, fromLon, fromLvl, toLat, toLon, toLvl, edgeBased);
 
-        LatLonRouting latLonRouting = new LatLonRouting(hopper);
         LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper, edgeBased);
 
-        PathWrapper route = latLonRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
-//        PathPrinter.printSummary("GHRequest Routing", route);
-
-//        PathPrinter.print("FootLevel All  EF", route);
-
-        route = lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
+        PathWrapper route = lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
         PathPrinter.print("FootLevel LevelEF", route);
     }
 

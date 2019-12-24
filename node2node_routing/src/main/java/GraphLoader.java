@@ -1,5 +1,5 @@
 import com.graphhopper.GraphHopper;
-import com.graphhopper.GraphHopperOsmLevelSupport;
+import com.graphhopper.reader.osm.GraphHopperOSM;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.util.FootFlagLevelEncoder;
 
@@ -8,7 +8,7 @@ public class GraphLoader {
 
     public static GraphHopper get(String osmFile, String graphFolder) {
         // create one GraphHopper instance
-        GraphHopper hopper = new GraphHopperOsmLevelSupport().forServer();
+        GraphHopper hopper = new GraphHopperOSM().forServer();
         hopper.setDataReaderFile(osmFile);
         hopper.setElevation(true);
 // where to store graphhopper files?
