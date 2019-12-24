@@ -3,6 +3,10 @@ import com.graphhopper.PathWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class Main {
     private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private final GraphHopper hopper;
@@ -29,6 +33,10 @@ public class Main {
         if(osmFile.contains("fuerstena")) {
             runFuTest();
         }
+
+        if(osmFile.contains("issue")) {
+            runIssueTest();
+        }
     }
 
     private void runStachusTest() {
@@ -52,8 +60,32 @@ public class Main {
     }
 
     private void runIssueTest(){
-        singleTest("issue", 0,0,5,5,0,0);
+        Poi southern_mid_point = new Poi(0, 0, Double.NaN, "southern mid point");
+        Poi northern_mid_point = new Poi(10, 0, Double.NaN, "northern mid point");
+        Poi northern_east_point = new Poi(10, 5, Double.NaN, "northern east point");
+        Poi southern_east_point = new Poi(5, 5, Double.NaN, "southern east point");
+        Poi west_point = new Poi(5, -5, Double.NaN, "west point");
+
+        singleTest(west_point, southern_east_point);
+        singleTest(west_point, northern_mid_point);
+        singleTest(west_point, southern_mid_point);
     }
+    private class Poi{
+        final double lat, lon, lvl;
+        final String name;
+
+        private Poi(double lat, double lon, double lvl, String name) {
+            this.lat = lat;
+            this.lon = lon;
+            this.lvl = lvl;
+            this.name = name;
+        }
+    }
+    private void singleTest(Poi a, Poi b){
+        String msg = String.format("%s to %s", a.name, b.name);
+        singleTest(msg, a.lat, a.lon, b.lat, b.lon, a.lvl, b.lvl);
+    }
+
     private void singleTest(String run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl, boolean edgeBased) {
         LOGGER.debug("Route {} from {},{},{} to {},{},{}. Edge based? {}", run, fromLat, fromLon, fromLvl, toLat, toLon, toLvl, edgeBased);
 

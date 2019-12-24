@@ -24,8 +24,12 @@ public class FootLevelEdgeFilter implements EdgeFilter {
     public boolean accept(EdgeIteratorState edgeState) {
         double level = encoder.getLevelFrom(edgeState.getFlags());
 
-        boolean isAccepted = expectedLevel == level;
-//        logger.debug("Edge {} accepted? {}", edgeState.getName(), isAccepted);
-        return isAccepted;
+        if(Double.isNaN(expectedLevel)){
+            return true;
+        }
+
+        boolean isMatch = expectedLevel == level;
+//        logger.debug("Edge {} accepted? {}", edgeState.getName(), isMatch);
+        return isMatch;
     }
 }
