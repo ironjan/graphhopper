@@ -11,6 +11,7 @@ public class GraphLoader {
         GraphHopper hopper = new GraphHopperOSM().forServer();
         hopper.setDataReaderFile(osmFile);
         hopper.setElevation(true);
+        hopper.setMinNetworkSize(1,1);
 // where to store graphhopper files?
         hopper.setGraphHopperLocation(graphFolder);
 
