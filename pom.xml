@@ -90,6 +90,7 @@
         <module>client-hc</module>
         <module>level-extension</module>
         <module>level-extension-test</module>
+        <module>geocoding</module>
     </modules>
     <build>
         <plugins>
