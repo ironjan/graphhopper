@@ -41,8 +41,8 @@ public class Main {
         }
 
         if(osmFile.contains("place_test")) {
-            singleTest(new Poi(0, 0,0,"WP"), new Poi(2,2,0,"NP"), true);
-            singleTest(new Poi(0, 0,0,"WP"), new Poi(0,4,0,"EP"), true);
+            singleTest(new Poi("WP", 0, 0,0), new Poi("NP", 2,2,0), true);
+            singleTest(new Poi("WP", 0, 0,0), new Poi("EP", 0,4,0), true);
             GraphHopperStorage graph = hopper.getGraphHopperStorage();
             NodeAccess nodeAccess = graph.getNodeAccess();
             for(int i=0; i< graph.getNodes();i++){
@@ -66,30 +66,31 @@ public class Main {
 
     private void runFuTest() {
 
-        singleTest(new Poi(51.73210,8.73502,0d, "entry"), new Poi(51.73191690536,8.73486839258,2d,"f2"),false);
+        singleTest(new Poi("entry", 51.73210,8.73502,0d), new Poi("f2", 51.73191690536,8.73486839258,2d),false);
         singleTest("entry-f2", 51.73210, 8.73502,51.73191690536, 8.73486839258, 0d, 2d);
-        singleTest(new Poi(51.73210,8.73502,0d, "entry"), new Poi(51.73191690536,8.73486839258,2d,"f2"),true);
+        singleTest(new Poi("entry", 51.73210,8.73502,0d), new Poi("f2", 51.73191690536,8.73486839258,2d),true);
 //        singleTest("entry-f0", 51.73210, 8.73502,51.73168,8.73467, 0d, -1d);
 //        singleTest("entry-f2", 51.73210, 8.73502,51.73191690536, 8.73486839258, 0d, 2d, true);
 //        singleTest("entry-f0", 51.73210, 8.73502,51.73168,8.73467, 0d, -1d, true);
     }
 
     private void runIssueTest(){
-        Poi southern_mid_point = new Poi(0, 0, Double.NaN, "southern mid point");
-        Poi northern_mid_point = new Poi(10, 0, Double.NaN, "northern mid point");
-        Poi northern_east_point = new Poi(10, 5, Double.NaN, "northern east point");
-        Poi southern_east_point = new Poi(5, 5, Double.NaN, "southern east point");
-        Poi west_point = new Poi(5, -5, Double.NaN, "west point");
+        Poi southern_mid_point = new Poi("southern mid point", 0, 0, Double.NaN);
+        Poi northern_mid_point = new Poi("northern mid point", 10, 0, Double.NaN);
+        Poi northern_east_point = new Poi("northern east point", 10, 5, Double.NaN);
+        Poi southern_east_point = new Poi("southern east point", 5, 5, Double.NaN);
+        Poi west_point = new Poi("west point", 5, -5, Double.NaN);
 
         singleTest(west_point, southern_east_point, true);
         singleTest(west_point, northern_mid_point,true);
         singleTest(west_point, southern_mid_point, true);
     }
-    private class Poi{
+
+    public class Poi{
         final double lat, lon, lvl;
         final String name;
 
-        private Poi(double lat, double lon, double lvl, String name) {
+        private Poi(String name, double lat, double lon, double lvl) {
             this.lat = lat;
             this.lon = lon;
             this.lvl = lvl;
