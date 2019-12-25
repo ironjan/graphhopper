@@ -86,17 +86,6 @@ public class Main {
         singleTest(west_point, southern_mid_point, true);
     }
 
-    public class Poi{
-        final double lat, lon, lvl;
-        final String name;
-
-        private Poi(String name, double lat, double lon, double lvl) {
-            this.lat = lat;
-            this.lon = lon;
-            this.lvl = lvl;
-            this.name = name;
-        }
-    }
     private void singleTest(Poi a, Poi b, boolean edgeBased){
         String msg = String.format("%s to %s", a.name, b.name);
         singleTest(msg, a.lat, a.lon, b.lat, b.lon, a.lvl, b.lvl, edgeBased);
