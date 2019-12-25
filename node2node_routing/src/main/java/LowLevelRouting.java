@@ -15,15 +15,18 @@ import com.graphhopper.util.TranslationMap;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class LowLevelRouting extends RoutingExample {
+public class LowLevelRouting {
 
     private FlagEncoder encoder;
     private WrappedShortestWeighting weighting;
     private boolean edgeBased;
 
-    public LowLevelRouting(GraphHopper hopper, boolean edgeBased) {
-        super(hopper);
-        this.edgeBased = edgeBased;
+    protected final GraphHopper hopper;
+
+     public LowLevelRouting(GraphHopper hopper, boolean edgeBased) {
+        super();
+         this.hopper = hopper;
+         this.edgeBased = edgeBased;
         encoder = GraphLoader.getEncodingManager().getEncoder("foot_level");
         weighting = new WrappedShortestWeighting(encoder);
     }
