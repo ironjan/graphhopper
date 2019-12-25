@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.ironjan</groupId>
     <name>GraphHopper Level Extension - Test Project</name>
-    <artifactId>node2node_routing</artifactId>
+    <artifactId>level-extension-test</artifactId>
 
 
     <dependencies>
