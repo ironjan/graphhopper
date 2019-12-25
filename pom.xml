@@ -88,8 +88,8 @@
         <module>web-api</module>
         <module>web</module>
         <module>client-hc</module>
-        <module>node2node_routing</module>
         <module>level-extension</module>
+        <module>level-extension-test</module>
     </modules>
     <build>
         <plugins>
