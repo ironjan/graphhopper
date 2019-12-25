@@ -8,8 +8,11 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <groupId>de.ironjan</groupId>
+    <name>GraphHopper Level Extension - Test Project</name>
     <artifactId>node2node_routing</artifactId>
+
+
     <dependencies>
         <dependency>
             <groupId>com.graphhopper</groupId>
@@ -28,6 +31,12 @@
             <artifactId>graphhopper-reader-osm</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.ironjan.graphhopper</groupId>
+            <artifactId>level-extension</artifactId>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
