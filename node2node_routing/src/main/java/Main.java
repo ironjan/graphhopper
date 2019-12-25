@@ -1,11 +1,9 @@
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
+import com.graphhopper.storage.GraphHopperStorage;
+import com.graphhopper.storage.NodeAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class Main {
     private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
@@ -37,6 +35,20 @@ public class Main {
         if(osmFile.contains("issue")) {
             runIssueTest();
         }
+
+        if(osmFile.contains("room")) {
+            singleTest("Just a test", 51.7260712,8.7387656, 51.6995871, 8.7423705, 0,0);
+        }
+
+        if(osmFile.contains("place_test")) {
+            singleTest(new Poi(0, 0,0,"WP"), new Poi(2,2,0,"NP"), true);
+            singleTest(new Poi(0, 0,0,"WP"), new Poi(0,4,0,"EP"), true);
+            GraphHopperStorage graph = hopper.getGraphHopperStorage();
+            NodeAccess nodeAccess = graph.getNodeAccess();
+            for(int i=0; i< graph.getNodes();i++){
+                LoggerFactory.getLogger(Main.class.getName()).debug("Has tower node: {},{}", nodeAccess.getLongitude(i), nodeAccess.getLatitude(i));
+            }
+        }
     }
 
     private void runStachusTest() {
@@ -53,10 +65,13 @@ public class Main {
     }
 
     private void runFuTest() {
+
+        singleTest(new Poi(51.73210,8.73502,0d, "entry"), new Poi(51.73191690536,8.73486839258,2d,"f2"),false);
         singleTest("entry-f2", 51.73210, 8.73502,51.73191690536, 8.73486839258, 0d, 2d);
-        singleTest("entry-f0", 51.73210, 8.73502,51.73168,8.73467, 0d, -1d);
-        singleTest("entry-f2", 51.73210, 8.73502,51.73191690536, 8.73486839258, 0d, 2d, true);
-        singleTest("entry-f0", 51.73210, 8.73502,51.73168,8.73467, 0d, -1d, true);
+        singleTest(new Poi(51.73210,8.73502,0d, "entry"), new Poi(51.73191690536,8.73486839258,2d,"f2"),true);
+//        singleTest("entry-f0", 51.73210, 8.73502,51.73168,8.73467, 0d, -1d);
+//        singleTest("entry-f2", 51.73210, 8.73502,51.73191690536, 8.73486839258, 0d, 2d, true);
+//        singleTest("entry-f0", 51.73210, 8.73502,51.73168,8.73467, 0d, -1d, true);
     }
 
     private void runIssueTest(){
@@ -66,9 +81,9 @@ public class Main {
         Poi southern_east_point = new Poi(5, 5, Double.NaN, "southern east point");
         Poi west_point = new Poi(5, -5, Double.NaN, "west point");
 
-        singleTest(west_point, southern_east_point);
-        singleTest(west_point, northern_mid_point);
-        singleTest(west_point, southern_mid_point);
+        singleTest(west_point, southern_east_point, true);
+        singleTest(west_point, northern_mid_point,true);
+        singleTest(west_point, southern_mid_point, true);
     }
     private class Poi{
         final double lat, lon, lvl;
@@ -81,9 +96,9 @@ public class Main {
             this.name = name;
         }
     }
-    private void singleTest(Poi a, Poi b){
+    private void singleTest(Poi a, Poi b, boolean edgeBased){
         String msg = String.format("%s to %s", a.name, b.name);
-        singleTest(msg, a.lat, a.lon, b.lat, b.lon, a.lvl, b.lvl);
+        singleTest(msg, a.lat, a.lon, b.lat, b.lon, a.lvl, b.lvl, edgeBased);
     }
 
     private void singleTest(String run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl, boolean edgeBased) {
