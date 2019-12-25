@@ -146,9 +146,7 @@ public class ViaRoutingTemplate extends AbstractRoutingTemplate implements Routi
                     sourceOutEdge = ignoreThrowOrAcceptImpossibleCurbsides(sourceOutEdge, placeIndex - 1, forceCurbsides);
                     targetInEdge = ignoreThrowOrAcceptImpossibleCurbsides(targetInEdge, placeIndex, forceCurbsides);
 
-                    int closestNode = fromQResult.getClosestNode();
-                    int closestNode1 = toQResult.getClosestNode();
-                    if (closestNode == closestNode1) {
+                    if (fromQResult.getClosestNode() == toQResult.getClosestNode()) {
                         // special case where we go from one point back to itself. for example going from a point A
                         // with curbside right to the same point with curbside right is interpreted as 'being there
                         // already' -> empty path. Similarly if the curbside for the start/target is not even specified
