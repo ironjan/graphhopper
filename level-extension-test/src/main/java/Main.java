@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 public class Main {
     private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private final GraphHopper hopper;
+    private GeocodingSample geocoding;
 
     public Main(GraphHopper hopper) {
         this.hopper = hopper;
@@ -24,69 +25,80 @@ public class Main {
     }
 
     private void runLatLonTest(String osmFile) {
-        if(osmFile.contains("stachus")){
+        setupPois();
+
+        if (osmFile.contains("stachus")) {
             runStachusTest();
         }
 
-        if(osmFile.contains("fuerstena")) {
+        if (osmFile.contains("fuerstena")) {
             runFuTest();
         }
 
-        if(osmFile.contains("issue")) {
+        if (osmFile.contains("issue")) {
             runIssueTest();
         }
 
-        if(osmFile.contains("room")) {
-            singleTest("Just a test", 51.7260712,8.7387656, 51.6995871, 8.7423705, 0,0);
+        if (osmFile.contains("room")) {
+            singleTest("Just a test", 51.7260712, 8.7387656, 51.6995871, 8.7423705, 0, 0);
         }
 
-        if(osmFile.contains("place_test")) {
-            singleTest(new Poi("WP", 0, 0,0), new Poi("NP", 2,2,0), true);
-            singleTest(new Poi("WP", 0, 0,0), new Poi("EP", 0,4,0), true);
+        if (osmFile.contains("place_test")) {
+            singleTest(new Poi("WP", 0, 0, 0), new Poi("NP", 2, 2, 0), true);
+            singleTest(new Poi("WP", 0, 0, 0), new Poi("EP", 0, 4, 0), true);
             GraphHopperStorage graph = hopper.getGraphHopperStorage();
             NodeAccess nodeAccess = graph.getNodeAccess();
-            for(int i=0; i< graph.getNodes();i++){
+            for (int i = 0; i < graph.getNodes(); i++) {
                 LoggerFactory.getLogger(Main.class.getName()).debug("Has tower node: {},{}", nodeAccess.getLongitude(i), nodeAccess.getLatitude(i));
             }
         }
     }
 
+    private void setupPois() {
+        this.geocoding = new GeocodingSample();
+        geocoding.addAll(
+                new Poi("Karlsplatz", 48.1394991, 11.5659233, -0d),
+                new Poi("Stachuspassage -1", 48.1394991, 11.5659233, -1d),
+                new Poi("München Hbf Lvl 0", 48.140203, 11.55972, 0d),
+                new Poi("München Hbf Lvl 1", 48.140203, 11.55972, 1d),
+                new Poi("Fürstenallee Eingang", 51.73210, 8.73502, 0d),
+                new Poi("Fürstenallee F2", 51.73191690536, 8.73486839258, 2d),
+                new Poi("southern mid point", 0, 0, Double.NaN),
+                new Poi("northern mid point", 10, 0, Double.NaN),
+                new Poi("northern east point", 10, 5, Double.NaN),
+                new Poi("southern east point", 5, 5, Double.NaN),
+                new Poi("west point", 5, -5, Double.NaN)
+        );
+    }
+
     private void runStachusTest() {
-
-//        singleTest(0,48.1403750, 11.5592910, 48.139029, 11.568700, 0d, 0d);
-//        singleTest(1,48.1387140, 11.5648430, 48.138832, 11.567654, 0d, 0d);
-//        singleTest(2,48.1384420, 11.5649660, 48.139029, 11.568700, 0d, 0d);
-
-        // Start is exactly on top of a "Stachuspassage, 1. Untergeschoss" node
-        singleTest("Karlsplatz",48.1394991, 11.5659233, 48.139029, 11.568700, -0d, 0d);
-        singleTest("Stachusp-1",48.1394991, 11.5659233, 48.139029, 11.568700, -1d, 0d);
-//        singleTest("Hbf      0",48.140203,11.55972, 48.138514,11.568131, 0d, 0d);
-//        singleTest("hbf      1",48.140203,11.55972, 48.138514,11.568131, 1d, 0d);
+        Poi tmp = new Poi("München, tmp", 48.139029, 11.568700, -0d);
+        singleTest(geocoding.getPoiByName("Karlsplatz"), tmp);
+        singleTest(geocoding.getPoiByName("Stachuspassage -1"), tmp);
     }
 
     private void runFuTest() {
-
-        singleTest(new Poi("entry", 51.73210,8.73502,0d), new Poi("f2", 51.73191690536,8.73486839258,2d),false);
-        singleTest("entry-f2", 51.73210, 8.73502,51.73191690536, 8.73486839258, 0d, 2d);
-        singleTest(new Poi("entry", 51.73210,8.73502,0d), new Poi("f2", 51.73191690536,8.73486839258,2d),true);
-//        singleTest("entry-f0", 51.73210, 8.73502,51.73168,8.73467, 0d, -1d);
-//        singleTest("entry-f2", 51.73210, 8.73502,51.73191690536, 8.73486839258, 0d, 2d, true);
-//        singleTest("entry-f0", 51.73210, 8.73502,51.73168,8.73467, 0d, -1d, true);
+        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), geocoding.getPoiByName("Fürstenallee F2"));
+        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new Poi("Fürstenallee FU", 51.73168,8.73467, -1d));
     }
 
-    private void runIssueTest(){
-        Poi southern_mid_point = new Poi("southern mid point", 0, 0, Double.NaN);
-        Poi northern_mid_point = new Poi("northern mid point", 10, 0, Double.NaN);
-        Poi northern_east_point = new Poi("northern east point", 10, 5, Double.NaN);
-        Poi southern_east_point = new Poi("southern east point", 5, 5, Double.NaN);
-        Poi west_point = new Poi("west point", 5, -5, Double.NaN);
+    private void runIssueTest() {
+        Poi southern_mid_point = geocoding.getPoiByName("southern mid point");
+        Poi northern_mid_point = geocoding.getPoiByName("northern mid point");
+        Poi northern_east_point =  geocoding.getPoiByName("northern east point");
+        Poi southern_east_point =  geocoding.getPoiByName("southern east point");
+        Poi west_point =  geocoding.getPoiByName("west point");
 
         singleTest(west_point, southern_east_point, true);
-        singleTest(west_point, northern_mid_point,true);
+        singleTest(west_point, northern_mid_point, true);
         singleTest(west_point, southern_mid_point, true);
     }
 
-    private void singleTest(Poi a, Poi b, boolean edgeBased){
+    private void singleTest(Poi a, Poi b) {
+        singleTest(a, b, false);
+    }
+
+    private void singleTest(Poi a, Poi b, boolean edgeBased) {
         String msg = String.format("%s to %s", a.name, b.name);
         singleTest(msg, a.lat, a.lon, b.lat, b.lon, a.lvl, b.lvl, edgeBased);
     }
