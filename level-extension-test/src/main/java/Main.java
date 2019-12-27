@@ -65,7 +65,7 @@ public class Main {
 
         this.geocoding = new Geocoding();
         geocoding.addSource(fromFile);
-        geocoding.addSource(fromPois);
+//        geocoding.addSource(fromPois);
 
         if (osmFile.contains("stachus")) {
             runStachusTest();
@@ -126,9 +126,9 @@ public class Main {
     private void runFuTest() {
 //        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), geocoding.getPoiByName("Fürstenallee F2"));
 //        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new Poi("Fürstenallee FU", 51.73168, 8.73467, -1d));
-        singleTest(geocoding.getByName("FU.Treppenhaus"), geocoding.getByName("FU.343"));
-        singleTest(geocoding.getByName("FU.Treppenhaus"), geocoding.getByName("FU.511"));
-        singleTest(geocoding.getByName("FU.Treppenhaus"), geocoding.getByName("FU.237"));
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.343"));
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.511"));
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.237"));
         singleTest(geocoding.getByName("FU.237"), geocoding.getByName("FU.511"));
     }
 
