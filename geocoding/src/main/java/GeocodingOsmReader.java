@@ -5,6 +5,7 @@ import com.graphhopper.reader.ReaderWay;
 import com.graphhopper.reader.osm.OSMInput;
 import com.graphhopper.reader.osm.OSMInputFile;
 import com.graphhopper.util.StopWatch;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLStreamException;
@@ -23,6 +24,8 @@ public class GeocodingOsmReader {
     private HashMap<Long, Coordinate> doors = new HashMap<>();
     private HashMap<String, Double> roomLevels = new HashMap<>();
     private List<Poi> discoveredPois = new ArrayList<>();
+    // Missing or invalid level
+    private Logger logger = LoggerFactory.getLogger(GeocodingOsmReader.class.getName());
 
     GeocodingOsmReader setOsmFile(File osmFile) {
         this.osmFile = osmFile;
@@ -75,6 +78,8 @@ public class GeocodingOsmReader {
 
                 if (isIndoorElementWithName) {
                     String name = item.getTag("name");
+                    logger.debug("Reading nodes of room like element. osmid = {}, name = {}.", item.getId(), name);
+
                     if (item.isType(ReaderElement.WAY)) {
                         ReaderWay way = (ReaderWay) item;
                         LongArrayList nodes = way.getNodes();
@@ -86,19 +91,22 @@ public class GeocodingOsmReader {
                             Double level = Double.parseDouble(way.getTag("level", ""));
                             roomLevels.put(name, level);
                         }catch (NumberFormatException e){
-                            // Missing or invalid level
-                            LoggerFactory.getLogger(GeocodingOsmReader.class.getName()).error("{}", e);
+                            logger.error("{}", e);
                         }
                     }
                 }
 
                 if(item.isType(ReaderElement.NODE)){
                     boolean isDoor = item.hasTag("door", "yes");
-                    ReaderNode node = (ReaderNode) item;
-                    doors.put(node.getId(),
-                            new Coordinate(node.getLat(), node.getLon(), Double.NaN));
+                    if(isDoor){
+                        ReaderNode node = (ReaderNode) item;
+                        doors.put(node.getId(),
+                                new Coordinate(node.getLat(), node.getLon(), Double.NaN));
+                    }
                 }
             }
+
+            logger.debug("Found {} rooms with {} doors.", roomNodes.size(), doors.size());
         } catch (Exception e) {
             throw new RuntimeException("Problem while parsing file", e);
         }
