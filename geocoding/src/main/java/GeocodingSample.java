@@ -1,38 +1,22 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class GeocodingSample {
-    private final HashMap<String, List<Entrance>> knownPois = new HashMap<>();
+    private final HashMap<String, Poi> knownPois = new HashMap<>();
 
-
-    public Entrance getSingleEntranceOf(String name) {
-        List<Entrance> entrances = getEntrancesOfs(name);
-        if(entrances == null){
-            return null;
-        }
-
-        return entrances.get(0);
-    }
-    public List<Entrance> getEntrancesOfs(String name) {
+    public Poi getByName(String name) {
         if (knownPois.containsKey(name)) {
             return knownPois.get(name);
         }
-        return new ArrayList<>();
+        return null;
     }
 
-    public void add(Entrance entrance) {
-        List<Entrance> entrances =
-                (knownPois.containsKey(entrance.name))
-                        ? knownPois.get(entrance.name)
-                        : new ArrayList<Entrance>();
-        entrances.add(entrance);
-        knownPois.put(entrance.name, entrances);
+    public void add(Poi poi) {
+        knownPois.put(poi.name, poi);
     }
 
-    public void addAll(Entrance... pois) {
-        for (Entrance entrance : pois) {
-            add(entrance);
+    public void addAll(Poi... pois) {
+        for (Poi poi : pois) {
+            add(poi);
         }
     }
 }
