@@ -1,7 +1,11 @@
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PoiRoutingWrapper {
@@ -12,8 +16,8 @@ public class PoiRoutingWrapper {
     }
 
     public PathWrapper route(Poi a, Poi b) {
-        List<Coordinate> entrancesOfA = a.coordinates;
-        List<Coordinate> entrancesOfB = b.coordinates;
+        List<Coordinate> entrancesOfA = a.entrances;
+        List<Coordinate> entrancesOfB = b.entrances;
 
         ArrayList<PathWrapper> routes = new ArrayList<>(entrancesOfA.size() * entrancesOfB.size());
 
@@ -25,6 +29,20 @@ public class PoiRoutingWrapper {
                 }
             }
         }
+
+
+        Logger logger = LoggerFactory.getLogger(PoiRoutingWrapper.class.getName());
+        logger.debug("Found {} routes from {} to {}",routes.size(), a.name, b.name);
+        for (PathWrapper p : routes) {
+            logger.debug("{}m -- {}",p.getDistance(), p);
+        }
+
+        Collections.sort(routes, new Comparator<PathWrapper>() {
+            @Override
+            public int compare(PathWrapper o1, PathWrapper o2) {
+                return Double.compare(o1.getDistance(), o2.getDistance());
+            }
+        });
         if(routes.size()>0){
             // fixme select best
             return routes.get(0);

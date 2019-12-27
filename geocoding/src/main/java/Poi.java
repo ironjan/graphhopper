@@ -4,16 +4,16 @@ import java.util.List;
 
 public class Poi{
     final String name;
-    final List<Coordinate> coordinates = new ArrayList<>();
+    final List<Coordinate> entrances = new ArrayList<>();
 
-    public Poi(String name, Coordinate... coordinates) {
+    public Poi(String name, Coordinate... entrances) {
         this.name = name;
 
-        if(coordinates.length<1) {
+        if(entrances.length<1) {
             throw new IllegalArgumentException("Must have at least one entrance.");
         }
 
-        Collections.addAll(this.coordinates, coordinates);
+        Collections.addAll(this.entrances, entrances);
     }
 
     public Poi(String name, double lat, double lon, double lvl){
