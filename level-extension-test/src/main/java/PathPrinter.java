@@ -26,12 +26,11 @@ public class PathPrinter {
         try{
 
             InstructionList il = path.getInstructions();
-// iterate over every turn instruction
+            // iterate over every turn instruction
             for (Instruction instruction : il) {
                 TranslationMap translationMap = new TranslationMap().doImport();
                 Translation tr = translationMap.getWithFallBack(Locale.GERMAN);
-                logger.debug("{} {}", instruction.getTurnDescription(tr), instruction);
-                logger.debug("{}", instruction.getExtraInfoJSON());
+                logger.debug("{} {}, extra: {}", instruction.getTurnDescription(tr), instruction, instruction.getExtraInfoJSON());
 
             }
         }catch (Exception ignored){}

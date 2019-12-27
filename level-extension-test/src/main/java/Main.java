@@ -5,6 +5,8 @@ import com.graphhopper.storage.NodeAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
 public class Main {
     private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private final GraphHopper hopper;
@@ -44,13 +46,35 @@ public class Main {
         }
 
         if (osmFile.contains("place_test")) {
-            singleTest(new Poi("WP", 0, 0, 0), new Poi("NP", 2, 2, 0), true);
-            singleTest(new Poi("WP", 0, 0, 0), new Poi("EP", 0, 4, 0), true);
-            GraphHopperStorage graph = hopper.getGraphHopperStorage();
-            NodeAccess nodeAccess = graph.getNodeAccess();
-            for (int i = 0; i < graph.getNodes(); i++) {
-                LoggerFactory.getLogger(Main.class.getName()).debug("Has tower node: {},{}", nodeAccess.getLongitude(i), nodeAccess.getLatitude(i));
+            place_test();
+        }
+
+        if (osmFile.contains("floor")) {
+            runFloorTest();
+        }
+
+        if (osmFile.contains("area_test")) {
+            String[] poiNames = {"Southwest Building", "East Block", "Center Church", "Northwest Building", "South Point"};
+
+            for (String a : poiNames) {
+                for (String b : poiNames) {
+                    singleTest(geocoding.getPoiByName(a), geocoding.getPoiByName(b));
+                }
             }
+        }
+    }
+
+    private void place_test() {
+        singleTest(new Poi("WP", 0, 0, 0), new Poi("NP", 2, 2, 0), true);
+        singleTest(new Poi("WP", 0, 0, 0), new Poi("EP", 0, 4, 0), true);
+        printTowerNodes();
+    }
+
+    private void printTowerNodes() {
+        GraphHopperStorage graph = hopper.getGraphHopperStorage();
+        NodeAccess nodeAccess = graph.getNodeAccess();
+        for (int i = 0; i < graph.getNodes(); i++) {
+            LoggerFactory.getLogger(Main.class.getName()).debug("Has tower node: {},{}", nodeAccess.getLongitude(i), nodeAccess.getLatitude(i));
         }
     }
 
@@ -67,7 +91,12 @@ public class Main {
                 new Poi("northern mid point", 10, 0, Double.NaN),
                 new Poi("northern east point", 10, 5, Double.NaN),
                 new Poi("southern east point", 5, 5, Double.NaN),
-                new Poi("west point", 5, -5, Double.NaN)
+                new Poi("west point", 5, -5, Double.NaN),
+                new Poi("Southwest Building", 51.701, 8.7287, 0),
+                new Poi("East Block", 51.730, 8.7855, 0),
+                new Poi("Center Church", 51.717, 8.755, 0),
+                new Poi("Northwest Building", 51.735, 8.724, 0),
+                new Poi("South Point", 51.6965, 8.7759, 0)
         );
     }
 
@@ -79,15 +108,24 @@ public class Main {
 
     private void runFuTest() {
         singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), geocoding.getPoiByName("Fürstenallee F2"));
-        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new Poi("Fürstenallee FU", 51.73168,8.73467, -1d));
+        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new Poi("Fürstenallee FU", 51.73168, 8.73467, -1d));
+    }
+
+    private void runFloorTest() {
+        printTowerNodes();
+
+        Poi ground = new Poi("Mid Ground floor", 51.733, 8.7473, 0d);
+        Poi minus1 = new Poi("Mid Lower floor", 51.733, 8.7473, -1d);
+
+        singleTest(ground, minus1);
     }
 
     private void runIssueTest() {
         Poi southern_mid_point = geocoding.getPoiByName("southern mid point");
         Poi northern_mid_point = geocoding.getPoiByName("northern mid point");
-        Poi northern_east_point =  geocoding.getPoiByName("northern east point");
-        Poi southern_east_point =  geocoding.getPoiByName("southern east point");
-        Poi west_point =  geocoding.getPoiByName("west point");
+        Poi northern_east_point = geocoding.getPoiByName("northern east point");
+        Poi southern_east_point = geocoding.getPoiByName("southern east point");
+        Poi west_point = geocoding.getPoiByName("west point");
 
         singleTest(west_point, southern_east_point, true);
         singleTest(west_point, northern_mid_point, true);
