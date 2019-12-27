@@ -56,15 +56,15 @@ public class Main {
 
             for (String a : poiNames) {
                 for (String b : poiNames) {
-                    singleTest(geocoding.getPoiByName(a), geocoding.getPoiByName(b));
+                    singleTest(geocoding.getSingleEntranceOf(a), geocoding.getSingleEntranceOf(b));
                 }
             }
         }
     }
 
     private void place_test() {
-        singleTest(new Poi("WP", 0, 0, 0), new Poi("NP", 2, 2, 0), true);
-        singleTest(new Poi("WP", 0, 0, 0), new Poi("EP", 0, 4, 0), true);
+        singleTest(new Entrance("WP", 0, 0, 0), new Entrance("NP", 2, 2, 0), true);
+        singleTest(new Entrance("WP", 0, 0, 0), new Entrance("EP", 0, 4, 0), true);
         printTowerNodes();
     }
 
@@ -79,77 +79,77 @@ public class Main {
     private void setupPois() {
         this.geocoding = new GeocodingSample();
         geocoding.addAll(
-                new Poi("Karlsplatz", 48.1394991, 11.5659233, -0d),
-                new Poi("Stachuspassage -1", 48.1394991, 11.5659233, -1d),
-                new Poi("München Hbf Lvl 0", 48.140203, 11.55972, 0d),
-                new Poi("München Hbf Lvl 1", 48.140203, 11.55972, 1d),
-                new Poi("southern mid point", 0, 0, Double.NaN),
-                new Poi("northern mid point", 10, 0, Double.NaN),
-                new Poi("northern east point", 10, 5, Double.NaN),
-                new Poi("southern east point", 5, 5, Double.NaN),
-                new Poi("west point", 5, -5, Double.NaN),
-                new Poi("Southwest Building", 51.701, 8.7287, 0),
-                new Poi("East Block", 51.730, 8.7855, 0),
-                new Poi("Center Church", 51.717, 8.755, 0),
-                new Poi("Northwest Building", 51.735, 8.724, 0),
-                new Poi("South Point", 51.6965, 8.7759, 0),
+                new Entrance("Karlsplatz", 48.1394991, 11.5659233, -0d),
+                new Entrance("Stachuspassage -1", 48.1394991, 11.5659233, -1d),
+                new Entrance("München Hbf Lvl 0", 48.140203, 11.55972, 0d),
+                new Entrance("München Hbf Lvl 1", 48.140203, 11.55972, 1d),
+                new Entrance("southern mid point", 0, 0, Double.NaN),
+                new Entrance("northern mid point", 10, 0, Double.NaN),
+                new Entrance("northern east point", 10, 5, Double.NaN),
+                new Entrance("southern east point", 5, 5, Double.NaN),
+                new Entrance("west point", 5, -5, Double.NaN),
+                new Entrance("Southwest Building", 51.701, 8.7287, 0),
+                new Entrance("East Block", 51.730, 8.7855, 0),
+                new Entrance("Center Church", 51.717, 8.755, 0),
+                new Entrance("Northwest Building", 51.735, 8.724, 0),
+                new Entrance("South Point", 51.6965, 8.7759, 0),
 
-                new Poi("Fürstenallee Eingang",
+                new Entrance("Fürstenallee Eingang",
                         51.73210, 8.73502, 0d),
-                new Poi("Fürstenallee F2",
+                new Entrance("Fürstenallee F2",
                         51.73191690536, 8.73486839258, 2d),
-                new Poi("FU.343",
+                new Entrance("FU.343",
                         51.7317734,8.7341487,-1),
-                new Poi("FU.Treppenhaus",
+                new Entrance("FU.Treppenhaus",
                         51.718908,8.7350631,-1),
-                new Poi("FU.511",
+                new Entrance("FU.511",
                         51.7318436,8.7344504,-1),
-                new Poi("FU.237",
+                new Entrance("FU.237",
                         51.7314104,8.7350023,-1)
         );
     }
 
     private void runStachusTest() {
-        Poi tmp = new Poi("München, tmp", 48.139029, 11.568700, -0d);
-        singleTest(geocoding.getPoiByName("Karlsplatz"), tmp);
-        singleTest(geocoding.getPoiByName("Stachuspassage -1"), tmp);
+        Entrance tmp = new Entrance("München, tmp", 48.139029, 11.568700, -0d);
+        singleTest(geocoding.getSingleEntranceOf("Karlsplatz"), tmp);
+        singleTest(geocoding.getSingleEntranceOf("Stachuspassage -1"), tmp);
     }
 
     private void runFuTest() {
 //        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), geocoding.getPoiByName("Fürstenallee F2"));
 //        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new Poi("Fürstenallee FU", 51.73168, 8.73467, -1d));
-        singleTest(geocoding.getPoiByName("FU.Treppenhaus"), geocoding.getPoiByName("FU.343"));
-        singleTest(geocoding.getPoiByName("FU.Treppenhaus"), geocoding.getPoiByName("FU.511"));
-        singleTest(geocoding.getPoiByName("FU.Treppenhaus"), geocoding.getPoiByName("FU.237"));
-        singleTest(geocoding.getPoiByName("FU.237"), geocoding.getPoiByName("FU.511"));
+        singleTest(geocoding.getSingleEntranceOf("FU.Treppenhaus"), geocoding.getSingleEntranceOf("FU.343"));
+        singleTest(geocoding.getSingleEntranceOf("FU.Treppenhaus"), geocoding.getSingleEntranceOf("FU.511"));
+        singleTest(geocoding.getSingleEntranceOf("FU.Treppenhaus"), geocoding.getSingleEntranceOf("FU.237"));
+        singleTest(geocoding.getSingleEntranceOf("FU.237"), geocoding.getSingleEntranceOf("FU.511"));
     }
 
     private void runFloorTest() {
         printTowerNodes();
 
-        Poi ground = new Poi("Mid Ground floor", 51.733, 8.7473, 0d);
-        Poi minus1 = new Poi("Mid Lower floor", 51.733, 8.7473, -1d);
+        Entrance ground = new Entrance("Mid Ground floor", 51.733, 8.7473, 0d);
+        Entrance minus1 = new Entrance("Mid Lower floor", 51.733, 8.7473, -1d);
 
         singleTest(ground, minus1);
     }
 
     private void runIssueTest() {
-        Poi southern_mid_point = geocoding.getPoiByName("southern mid point");
-        Poi northern_mid_point = geocoding.getPoiByName("northern mid point");
-        Poi northern_east_point = geocoding.getPoiByName("northern east point");
-        Poi southern_east_point = geocoding.getPoiByName("southern east point");
-        Poi west_point = geocoding.getPoiByName("west point");
+        Entrance southern_mid_point = geocoding.getSingleEntranceOf("southern mid point");
+        Entrance northern_mid_point = geocoding.getSingleEntranceOf("northern mid point");
+        Entrance northern_east_point = geocoding.getSingleEntranceOf("northern east point");
+        Entrance southern_east_point = geocoding.getSingleEntranceOf("southern east point");
+        Entrance west_point = geocoding.getSingleEntranceOf("west point");
 
         singleTest(west_point, southern_east_point, true);
         singleTest(west_point, northern_mid_point, true);
         singleTest(west_point, southern_mid_point, true);
     }
 
-    private void singleTest(Poi a, Poi b) {
+    private void singleTest(Entrance a, Entrance b) {
         singleTest(a, b, false);
     }
 
-    private void singleTest(Poi a, Poi b, boolean edgeBased) {
+    private void singleTest(Entrance a, Entrance b, boolean edgeBased) {
         String msg = String.format("%s to %s", a.name, b.name);
         singleTest(msg, a.lat, a.lon, b.lat, b.lon, a.lvl, b.lvl, edgeBased);
     }
