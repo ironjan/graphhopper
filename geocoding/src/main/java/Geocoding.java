@@ -23,6 +23,27 @@ public class Geocoding {
 
         return null;
     }
+    
+    public List<String> getAllNames(){
+        List<String> allPoiNames = new ArrayList<>(size());
+
+        allPoiNames.addAll(knownPois.keySet());
+
+        for (Geocoding source : otherSources) {
+            allPoiNames.addAll(source.getAllNames());
+        }
+
+        return allPoiNames;
+    }
+
+    private int size() {
+        int size = knownPois.size();
+        for (Geocoding g :
+                otherSources) {
+            size += g.size();
+        }
+        return size;
+    }
 
     public void addSource(Geocoding geocoding) {
         otherSources.add(geocoding);
