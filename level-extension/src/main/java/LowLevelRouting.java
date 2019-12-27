@@ -21,7 +21,7 @@ public class LowLevelRouting {
     private WrappedShortestWeighting weighting;
     private boolean edgeBased;
 
-    protected final GraphHopper hopper;
+    private final GraphHopper hopper;
 
      public LowLevelRouting(GraphHopper hopper, boolean edgeBased) {
         super();
