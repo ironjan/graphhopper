@@ -5,8 +5,6 @@ import com.graphhopper.storage.NodeAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-
 public class Main {
     private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private final GraphHopper hopper;
@@ -33,7 +31,7 @@ public class Main {
             runStachusTest();
         }
 
-        if (osmFile.contains("fuerstena")) {
+        if (osmFile.contains("upb-fu")) {
             runFuTest();
         }
 
@@ -85,8 +83,6 @@ public class Main {
                 new Poi("Stachuspassage -1", 48.1394991, 11.5659233, -1d),
                 new Poi("München Hbf Lvl 0", 48.140203, 11.55972, 0d),
                 new Poi("München Hbf Lvl 1", 48.140203, 11.55972, 1d),
-                new Poi("Fürstenallee Eingang", 51.73210, 8.73502, 0d),
-                new Poi("Fürstenallee F2", 51.73191690536, 8.73486839258, 2d),
                 new Poi("southern mid point", 0, 0, Double.NaN),
                 new Poi("northern mid point", 10, 0, Double.NaN),
                 new Poi("northern east point", 10, 5, Double.NaN),
@@ -96,7 +92,20 @@ public class Main {
                 new Poi("East Block", 51.730, 8.7855, 0),
                 new Poi("Center Church", 51.717, 8.755, 0),
                 new Poi("Northwest Building", 51.735, 8.724, 0),
-                new Poi("South Point", 51.6965, 8.7759, 0)
+                new Poi("South Point", 51.6965, 8.7759, 0),
+
+                new Poi("Fürstenallee Eingang",
+                        51.73210, 8.73502, 0d),
+                new Poi("Fürstenallee F2",
+                        51.73191690536, 8.73486839258, 2d),
+                new Poi("FU.343",
+                        51.7317734,8.7341487,-1),
+                new Poi("FU.Treppenhaus",
+                        51.718908,8.7350631,-1),
+                new Poi("FU.511",
+                        51.7318436,8.7344504,-1),
+                new Poi("FU.237",
+                        51.7314104,8.7350023,-1)
         );
     }
 
@@ -107,8 +116,12 @@ public class Main {
     }
 
     private void runFuTest() {
-        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), geocoding.getPoiByName("Fürstenallee F2"));
-        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new Poi("Fürstenallee FU", 51.73168, 8.73467, -1d));
+//        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), geocoding.getPoiByName("Fürstenallee F2"));
+//        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new Poi("Fürstenallee FU", 51.73168, 8.73467, -1d));
+        singleTest(geocoding.getPoiByName("FU.Treppenhaus"), geocoding.getPoiByName("FU.343"));
+        singleTest(geocoding.getPoiByName("FU.Treppenhaus"), geocoding.getPoiByName("FU.511"));
+        singleTest(geocoding.getPoiByName("FU.Treppenhaus"), geocoding.getPoiByName("FU.237"));
+        singleTest(geocoding.getPoiByName("FU.237"), geocoding.getPoiByName("FU.511"));
     }
 
     private void runFloorTest() {
