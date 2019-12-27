@@ -5,6 +5,8 @@ import com.graphhopper.storage.NodeAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class Main {
     private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private final GraphHopper hopper;
@@ -25,7 +27,45 @@ public class Main {
     }
 
     private void runLatLonTest(String osmFile) {
-        setupPois();
+        Geocoding fromPois = Geocoding.Loader.fromPois(
+                new Poi("Karlsplatz", 48.1394991, 11.5659233, -0d),
+                new Poi("Stachuspassage -1", 48.1394991, 11.5659233, -1d),
+                new Poi("München Hbf Lvl 0", 48.140203, 11.55972, 0d),
+                new Poi("München Hbf Lvl 1", 48.140203, 11.55972, 1d),
+                new Poi("southern mid point", 0, 0, Double.NaN),
+                new Poi("northern mid point", 10, 0, Double.NaN),
+                new Poi("northern east point", 10, 5, Double.NaN),
+                new Poi("southern east point", 5, 5, Double.NaN),
+                new Poi("west point", 5, -5, Double.NaN),
+                new Poi("Southwest Building", 51.701, 8.7287, 0),
+                new Poi("East Block", 51.730, 8.7855, 0),
+                new Poi("Center Church", 51.717, 8.755, 0),
+                new Poi("Northwest Building", 51.735, 8.724, 0),
+                new Poi("South Point", 51.6965, 8.7759, 0),
+
+                new Poi("Fürstenallee Eingang",
+                        51.73210, 8.73502, 0d),
+                new Poi("Fürstenallee F2",
+                        51.73191690536, 8.73486839258, 2d),
+                new Poi("FU.343",
+                        51.7317734, 8.7341487, -1),
+                new Poi("FU.Treppenhaus",
+                        51.718908, 8.7350631, -1),
+                new Poi("FU.511",
+                        new Coordinate(51.7318062, 8.7345019, -1),
+                        new Coordinate(51.7318080, 8.7343946, -1)),
+                new Poi("FU.237", 51.7314104, 8.7350023, -1)
+        );
+        Geocoding fromFile = null;
+        try {
+            fromFile = Geocoding.Loader.fromFile(osmFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        this.geocoding = new Geocoding();
+        geocoding.addSource(fromFile);
+        geocoding.addSource(fromPois);
 
         if (osmFile.contains("stachus")) {
             runStachusTest();
@@ -56,7 +96,7 @@ public class Main {
 
             for (String a : poiNames) {
                 for (String b : poiNames) {
-                    singleTest(geocoding.getByName(a), geocoding.getByName(b));
+                    singleTest(this.geocoding.getByName(a), this.geocoding.getByName(b));
                 }
             }
         }
@@ -76,38 +116,6 @@ public class Main {
         }
     }
 
-    private void setupPois() {
-        this.geocoding = new Geocoding();
-        geocoding.addAll(
-                new Poi("Karlsplatz", 48.1394991, 11.5659233, -0d),
-                new Poi("Stachuspassage -1", 48.1394991, 11.5659233, -1d),
-                new Poi("München Hbf Lvl 0", 48.140203, 11.55972, 0d),
-                new Poi("München Hbf Lvl 1", 48.140203, 11.55972, 1d),
-                new Poi("southern mid point", 0, 0, Double.NaN),
-                new Poi("northern mid point", 10, 0, Double.NaN),
-                new Poi("northern east point", 10, 5, Double.NaN),
-                new Poi("southern east point", 5, 5, Double.NaN),
-                new Poi("west point", 5, -5, Double.NaN),
-                new Poi("Southwest Building", 51.701, 8.7287, 0),
-                new Poi("East Block", 51.730, 8.7855, 0),
-                new Poi("Center Church", 51.717, 8.755, 0),
-                new Poi("Northwest Building", 51.735, 8.724, 0),
-                new Poi("South Point", 51.6965, 8.7759, 0),
-
-                new Poi("Fürstenallee Eingang",
-                        51.73210, 8.73502, 0d),
-                new Poi("Fürstenallee F2",
-                        51.73191690536, 8.73486839258, 2d),
-                new Poi("FU.343",
-                        51.7317734,8.7341487,-1),
-                new Poi("FU.Treppenhaus",
-                        51.718908,8.7350631,-1),
-                new Poi("FU.511",
-                        new Coordinate(51.7318062,8.7345019,-1),
-                        new Coordinate(51.7318080,8.7343946,-1)),
-                new Poi("FU.237", 51.7314104,8.7350023,-1)
-        );
-    }
 
     private void runStachusTest() {
         Poi tmp = new Poi("München, tmp", 48.139029, 11.568700, -0d);
@@ -144,14 +152,16 @@ public class Main {
         singleTest(west_point, northern_mid_point, true);
         singleTest(west_point, southern_mid_point, true);
     }
+
     private void singleTest(Poi A, Poi B) {
-        singleTest(A,B,true);
+        singleTest(A, B, true);
     }
-    private void singleTest(Poi A, Poi B, boolean edgeBased){
+
+    private void singleTest(Poi A, Poi B, boolean edgeBased) {
         PoiRoutingWrapper routingWrapper = new PoiRoutingWrapper(hopper, edgeBased);
         LOGGER.debug("POI Routing from {} to {}", A.name, B.name);
         PathWrapper route = routingWrapper.route(A, B);
-                PathPrinter.print("FootLevel LevelEF", route);
+        PathPrinter.print("FootLevel LevelEF", route);
 
     }
 
