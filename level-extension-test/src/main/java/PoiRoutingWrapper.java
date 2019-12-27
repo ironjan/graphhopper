@@ -24,7 +24,7 @@ public class PoiRoutingWrapper {
         for (Coordinate fromCoordinate : entrancesOfA) {
             for (Coordinate toCoordinate : entrancesOfB) {
                 PathWrapper route = entranceRouting.route(fromCoordinate, toCoordinate);
-                if(route != null) {
+                if(route != null && !route.hasErrors()) {
                     routes.add(route);
                 }
             }
