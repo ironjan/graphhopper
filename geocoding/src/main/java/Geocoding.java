@@ -1,18 +1,32 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Geocoding {
     private final HashMap<String, Poi> knownPois = new HashMap<>();
+    private List<Geocoding> otherSources = new ArrayList<>();
+    ;
 
     public Poi getByName(String name) {
         if (knownPois.containsKey(name)) {
             return knownPois.get(name);
         }
+
+        for (Geocoding src: otherSources) {
+            Poi potentialResult = src.getByName(name);
+            if(potentialResult != null) {
+                return potentialResult;
+            }
+        }
+
         return null;
     }
 
+    public void addSource(Geocoding geocoding) {
+        otherSources.add(geocoding);
+    }
     private void add(Poi poi) {
         knownPois.put(poi.name, poi);
     }
@@ -24,7 +38,7 @@ public class Geocoding {
     }
 
     public static class Loader {
-        public Geocoding load(String osmFile) throws IOException {
+        public static Geocoding fromFile(String osmFile) throws IOException {
             GeocodingOsmReader osmReader = new GeocodingOsmReader();
             osmReader.setOsmFile(new File(osmFile));
             List<Poi> pois = osmReader.readGraph();
@@ -34,5 +48,13 @@ public class Geocoding {
             }
             return geocoding;
         }
+
+        public static Geocoding fromPois(Poi... pois) {
+            Geocoding geocoding = new Geocoding();
+            geocoding.addAll(pois);
+            return geocoding;
+        }
+
+
     }
 }
