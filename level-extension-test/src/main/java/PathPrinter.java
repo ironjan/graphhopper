@@ -1,5 +1,6 @@
 import com.graphhopper.PathWrapper;
 import com.graphhopper.util.*;
+import com.graphhopper.util.shapes.GHPoint3D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +32,26 @@ public class PathPrinter {
                 TranslationMap translationMap = new TranslationMap().doImport();
                 Translation tr = translationMap.getWithFallBack(Locale.GERMAN);
                 logger.debug("{} {}, extra: {}", instruction.getTurnDescription(tr), instruction, instruction.getExtraInfoJSON());
-
             }
+            collectWayOsm(path);
         }catch (Exception ignored){}
 
+    }
+
+    private static void collectWayOsm(PathWrapper path) {
+        StringBuilder sb = new StringBuilder("<?xml version='1.0' encoding='UTF-8'?><osm version='0.6' generator='JOSM'>");
+        PointList points = path.getPoints();
+        int counter = 100;
+        for (GHPoint3D p :points) {
+            sb.append("<node id='-");
+            sb.append(counter++);
+            sb.append("' lat='");
+            sb.append(p.lat);
+            sb.append("' lon='");
+            sb.append(p.lon);
+            sb.append("' />");
+        }
+        sb.append("</osm>");
+        logger.debug(sb.toString());
     }
 }
