@@ -21,4 +21,8 @@ public class Poi{
     }
 
 
+    public Poi(String name, List<Coordinate> cList) {
+        this.name = name;
+        this.entrances.addAll(cList);
+    }
 }

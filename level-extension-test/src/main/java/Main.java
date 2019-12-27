@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 public class Main {
     private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private final GraphHopper hopper;
-    private GeocodingSample geocoding;
+    private Geocoding geocoding;
 
     public Main(GraphHopper hopper) {
         this.hopper = hopper;
@@ -77,7 +77,7 @@ public class Main {
     }
 
     private void setupPois() {
-        this.geocoding = new GeocodingSample();
+        this.geocoding = new Geocoding();
         geocoding.addAll(
                 new Poi("Karlsplatz", 48.1394991, 11.5659233, -0d),
                 new Poi("Stachuspassage -1", 48.1394991, 11.5659233, -1d),
