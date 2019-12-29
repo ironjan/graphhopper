@@ -368,7 +368,7 @@ public class MainActivity extends Activity {
         mapView.map().layers().add(itemizedLayer);
 
         // Map position
-        GeoPoint mapCenter = tileSource.getMapInfo().boundingBox.getCenterPoint();
+        GeoPoint mapCenter = new GeoPoint(50.2836424,11.6190666);//tileSource.getMapInfo().boundingBox.getCenterPoint();
         mapView.map().setMapPosition(mapCenter.getLatitude(), mapCenter.getLongitude(), 1 << 15);
 
         setContentView(mapView);
@@ -380,6 +380,7 @@ public class MainActivity extends Activity {
         new GHAsyncTask<Void, Void, Path>() {
             protected Path saveDoInBackground(Void... v) throws Exception {
                 GraphHopper tmpHopp = new GraphHopper().forMobile();
+                tmpHopp.setElevation(true);
                 tmpHopp.load(new File(mapsFolder, currentArea).getAbsolutePath() + "-gh");
                 log("found graph " + tmpHopp.getGraphHopperStorage().toString() + ", nodes:" + tmpHopp.getGraphHopperStorage().getNodes());
                 hopper = tmpHopp;
