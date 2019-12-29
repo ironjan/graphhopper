@@ -11,8 +11,8 @@ import java.util.List;
 public class PoiRoutingWrapper {
     private final EntranceRoutingWrapper entranceRouting;
 
-    public PoiRoutingWrapper(GraphHopper hopper, boolean edgeBased) {
-        entranceRouting = new EntranceRoutingWrapper(hopper, edgeBased);
+    public PoiRoutingWrapper(GraphHopper hopper) {
+        entranceRouting = new EntranceRoutingWrapper(hopper);
     }
 
     public PathWrapper route(Poi a, Poi b) {

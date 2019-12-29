@@ -4,8 +4,8 @@ import com.graphhopper.PathWrapper;
 public class EntranceRoutingWrapper {
     private final LowLevelRouting routing;
 
-    public EntranceRoutingWrapper(GraphHopper hopper, boolean edgeBased) {
-        routing = new LowLevelRouting(hopper, edgeBased);
+    public EntranceRoutingWrapper(GraphHopper hopper) {
+        routing = new LowLevelRouting(hopper);
     }
 
     public PathWrapper route(Coordinate a, Coordinate b) {

@@ -159,7 +159,7 @@ public class Main {
     }
 
     private void singleTest(Poi A, Poi B, Poi... pois) {
-        PoiRoutingWrapper routingWrapper = new PoiRoutingWrapper(hopper, false);
+        PoiRoutingWrapper routingWrapper = new PoiRoutingWrapper(hopper);
         StringBuilder poisSb = new StringBuilder();
         for (Poi poi: pois){
             poisSb.append(poi.name);
