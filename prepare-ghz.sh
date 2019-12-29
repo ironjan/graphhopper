@@ -27,6 +27,7 @@ FILE="95131"
 MAPS_FOLDER="$HOME/projects/maps"
 MAP_START_POS="50.2836424,11.6190666"
 MAP_START_ZOOM="17"
+BBOX="50.26696,11.5864563,50.3011828,11.6777802"
 
 INPUT_FILE="$MAPS_FOLDER/${FILE}.osm"
 GH_FOLDER="$MAPS_FOLDER/${FILE}-gh/"
@@ -35,7 +36,7 @@ MAP_FILE="${INPUT_FILE::-4}.map"
 rm -rv $GH_FOLDER
 ./graphhopper.sh -a import -i $INPUT_FILE
 
-osmosis --rx file=$INPUT_FILE --mapfile-writer file=$MAP_FILE map-start-position=$MAP_START_POS map-start-zoom=$MAP_START_ZOOM
+osmosis --rx file=$INPUT_FILE --mapfile-writer file=$MAP_FILE map-start-position=$MAP_START_POS map-start-zoom=$MAP_START_ZOOM bbox=$BBOX
 pushd $GH_FOLDER
 zip -r ${FILE}.ghz *
 popd
