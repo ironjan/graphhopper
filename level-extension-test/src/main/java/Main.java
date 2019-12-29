@@ -96,7 +96,7 @@ public class Main {
 
             for (String a : poiNames) {
                 for (String b : poiNames) {
-                    singleTest(this.geocoding.getByName(a), this.geocoding.getByName(b));
+                    singleTest(this.geocoding.getByName(a), this.geocoding.getByName(b), true);
                 }
             }
         }
@@ -119,17 +119,23 @@ public class Main {
 
     private void runStachusTest() {
         Poi tmp = new Poi("München, tmp", 48.139029, 11.568700, -0d);
-        singleTest(geocoding.getByName("Karlsplatz"), tmp);
-        singleTest(geocoding.getByName("Stachuspassage -1"), tmp);
+        singleTest(geocoding.getByName("Karlsplatz"), tmp, true);
+        singleTest(geocoding.getByName("Stachuspassage -1"), tmp, true);
     }
 
     private void runFuTest() {
 //        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), geocoding.getPoiByName("Fürstenallee F2"));
 //        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new Poi("Fürstenallee FU", 51.73168, 8.73467, -1d));
-        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.343"));
-        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.511"));
-        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.237"));
-        singleTest(geocoding.getByName("FU.237"), geocoding.getByName("FU.511"));
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.343"), true);
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.511"), true);
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.237"), true);
+        singleTest(geocoding.getByName("FU.237"), geocoding.getByName("FU.511"), true);
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("Treppenhaus Süd"), true);
+        singleTest(geocoding.getByName("Treppenhaus Süd"), geocoding.getByName("Treppenhaus Nord"), true);
+        singleTest(geocoding.getByName("Treppenhaus Süd"), geocoding.getByName("Treppenhaus Nord"),
+                true,
+                geocoding.getByName("FU.343"),
+                geocoding.getByName("FU.511"));
     }
 
     private void runFloorTest() {
@@ -153,13 +159,15 @@ public class Main {
         singleTest(west_point, southern_mid_point, true);
     }
 
-    private void singleTest(Poi A, Poi B) {
-        singleTest(A, B, true);
-    }
-
-    private void singleTest(Poi A, Poi B, boolean edgeBased) {
+    private void singleTest(Poi A, Poi B, boolean edgeBased, Poi... pois) {
         PoiRoutingWrapper routingWrapper = new PoiRoutingWrapper(hopper, edgeBased);
-        LOGGER.debug("POI Routing from {} to {}", A.name, B.name);
+        StringBuilder poisSb = new StringBuilder();
+        for (Poi poi: pois){
+            poisSb.append(poi.name);
+            poisSb.append(",");
+        }
+
+        LOGGER.debug("POI Routing from {} to {} via {}", A.name, B.name, poisSb);
         PathWrapper route = routingWrapper.route(A, B);
         PathPrinter.print("FootLevel LevelEF", route);
 
