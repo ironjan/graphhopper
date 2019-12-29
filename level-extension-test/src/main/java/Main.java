@@ -96,15 +96,15 @@ public class Main {
 
             for (String a : poiNames) {
                 for (String b : poiNames) {
-                    singleTest(this.geocoding.getByName(a), this.geocoding.getByName(b), true);
+                    singleTest(this.geocoding.getByName(a), this.geocoding.getByName(b));
                 }
             }
         }
     }
 
     private void place_test() {
-        singleTest(new Coordinate("WP", 0, 0, 0), new Coordinate("NP", 2, 2, 0), true);
-        singleTest(new Coordinate("WP", 0, 0, 0), new Coordinate("EP", 0, 4, 0), true);
+        singleTest(new Coordinate("WP", 0, 0, 0), new Coordinate("NP", 2, 2, 0));
+        singleTest(new Coordinate("WP", 0, 0, 0), new Coordinate("EP", 0, 4, 0));
         printTowerNodes();
     }
 
@@ -119,21 +119,20 @@ public class Main {
 
     private void runStachusTest() {
         Poi tmp = new Poi("München, tmp", 48.139029, 11.568700, -0d);
-        singleTest(geocoding.getByName("Karlsplatz"), tmp, true);
-        singleTest(geocoding.getByName("Stachuspassage -1"), tmp, true);
+        singleTest(geocoding.getByName("Karlsplatz"), tmp);
+        singleTest(geocoding.getByName("Stachuspassage -1"), tmp);
     }
 
     private void runFuTest() {
 //        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), geocoding.getPoiByName("Fürstenallee F2"));
 //        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new Poi("Fürstenallee FU", 51.73168, 8.73467, -1d));
-        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.343"), true);
-        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.511"), true);
-        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.237"), true);
-        singleTest(geocoding.getByName("FU.237"), geocoding.getByName("FU.511"), true);
-        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("Treppenhaus Süd"), true);
-        singleTest(geocoding.getByName("Treppenhaus Süd"), geocoding.getByName("Treppenhaus Nord"), true);
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.343"));
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.511"));
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.237"));
+        singleTest(geocoding.getByName("FU.237"), geocoding.getByName("FU.511"));
+        singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("Treppenhaus Süd"));
+        singleTest(geocoding.getByName("Treppenhaus Süd"), geocoding.getByName("Treppenhaus Nord"));
         singleTest(geocoding.getByName("Treppenhaus Süd"), geocoding.getByName("Treppenhaus Nord"),
-                true,
                 geocoding.getByName("FU.343"),
                 geocoding.getByName("FU.511"));
     }
@@ -154,13 +153,13 @@ public class Main {
         Poi southern_east_point = geocoding.getByName("southern east point");
         Poi west_point = geocoding.getByName("west point");
 
-        singleTest(west_point, southern_east_point, true);
-        singleTest(west_point, northern_mid_point, true);
-        singleTest(west_point, southern_mid_point, true);
+        singleTest(west_point, southern_east_point);
+        singleTest(west_point, northern_mid_point);
+        singleTest(west_point, southern_mid_point);
     }
 
-    private void singleTest(Poi A, Poi B, boolean edgeBased, Poi... pois) {
-        PoiRoutingWrapper routingWrapper = new PoiRoutingWrapper(hopper, edgeBased);
+    private void singleTest(Poi A, Poi B, Poi... pois) {
+        PoiRoutingWrapper routingWrapper = new PoiRoutingWrapper(hopper, false);
         StringBuilder poisSb = new StringBuilder();
         for (Poi poi: pois){
             poisSb.append(poi.name);
@@ -174,25 +173,17 @@ public class Main {
     }
 
     private void singleTest(Coordinate a, Coordinate b) {
-        singleTest(a, b, false);
-    }
-
-    private void singleTest(Coordinate a, Coordinate b, boolean edgeBased) {
         String msg = String.format("%s to %s", a.toString(), b.toString());
-        singleTest(msg, a.lat, a.lon, b.lat, b.lon, a.lvl, b.lvl, edgeBased);
-    }
-
-    private void singleTest(String run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl, boolean edgeBased) {
-        LOGGER.debug("Route {} from {},{},{} to {},{},{}. Edge based? {}", run, fromLat, fromLon, fromLvl, toLat, toLon, toLvl, edgeBased);
-
-        LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper, edgeBased);
-
-        PathWrapper route = lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
-        PathPrinter.print("FootLevel LevelEF", route);
+        singleTest(msg, a.lat, a.lon, b.lat, b.lon, a.lvl, b.lvl);
     }
 
     private void singleTest(String run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
-        singleTest(run, fromLat, fromLon, toLat, toLon, fromLvl, toLvl, false);
+        LOGGER.debug("Route {} from {},{},{} to {},{},{}. Edge based? {}", run, fromLat, fromLon, fromLvl, toLat, toLon, toLvl, false);
+
+        LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper);
+
+        PathWrapper route = lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
+        PathPrinter.print("FootLevel LevelEF", route);
     }
 
 }

@@ -19,14 +19,12 @@ public class LowLevelRouting {
 
     private FlagEncoder encoder;
     private WrappedShortestWeighting weighting;
-    private boolean edgeBased;
 
     private final GraphHopper hopper;
 
-     public LowLevelRouting(GraphHopper hopper, boolean edgeBased) {
+     public LowLevelRouting(GraphHopper hopper) {
         super();
          this.hopper = hopper;
-         this.edgeBased = edgeBased;
         encoder = GraphLoader.getEncodingManager().getEncoder("foot_level");
         weighting = new WrappedShortestWeighting(encoder);
     }
@@ -51,7 +49,7 @@ public class LowLevelRouting {
         QueryGraph queryGraph = QueryGraph.lookup(graph, qrs);
 
 
-        TraversalMode traversalMode = edgeBased ? TraversalMode.EDGE_BASED : TraversalMode.NODE_BASED;
+        TraversalMode traversalMode = TraversalMode.NODE_BASED;
 
 
         Path path = new Dijkstra(queryGraph, weighting, traversalMode)
