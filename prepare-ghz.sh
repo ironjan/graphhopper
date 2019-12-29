@@ -36,3 +36,6 @@ rm -rv $GH_FOLDER
 ./graphhopper.sh -a import -i $INPUT_FILE
 
 osmosis --rx file=$INPUT_FILE --mapfile-writer file=$MAP_FILE map-start-position=$MAP_START_POS map-start-zoom=$MAP_START_ZOOM
+pushd $GH_FOLDER
+zip -r ${FILE}.ghz *
+popd
