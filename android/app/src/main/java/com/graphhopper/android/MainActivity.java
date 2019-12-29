@@ -440,7 +440,8 @@ public class MainActivity extends Activity {
             protected PathWrapper doInBackground(Void... v) {
                 StopWatch sw = new StopWatch().start();
                 GHRequest req = new GHRequest(fromLat, fromLon, toLat, toLon).
-                        setAlgorithm(Algorithms.DIJKSTRA_BI);
+                        setAlgorithm(Algorithms.DIJKSTRA_BI)
+                        .setVehicle("foot");
                 req.getHints().
                         put(Routing.INSTRUCTIONS, "false");
                 GHResponse resp = hopper.route(req);
