@@ -62,6 +62,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import de.ironjan.graphhopper.levelextension.LowLevelRouting;
+
 public class MainActivity extends Activity {
     private static final int NEW_MENU_ID = Menu.FIRST + 1;
     private MapView mapView;
@@ -439,14 +441,10 @@ public class MainActivity extends Activity {
 
             protected PathWrapper doInBackground(Void... v) {
                 StopWatch sw = new StopWatch().start();
-                GHRequest req = new GHRequest(fromLat, fromLon, toLat, toLon).
-                        setAlgorithm(Algorithms.DIJKSTRA_BI)
-                        .setVehicle("foot");
-                req.getHints().
-                        put(Routing.INSTRUCTIONS, "false");
-                GHResponse resp = hopper.route(req);
+                LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper);
+                PathWrapper route = lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, 0, 0);
                 time = sw.stop().getSeconds();
-                return resp.getBest();
+                return route;
             }
 
             protected void onPostExecute(PathWrapper resp) {
