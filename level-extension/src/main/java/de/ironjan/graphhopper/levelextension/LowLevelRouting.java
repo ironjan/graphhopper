@@ -1,3 +1,5 @@
+package de.ironjan.graphhopper.levelextension;
+
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import com.graphhopper.routing.Dijkstra;

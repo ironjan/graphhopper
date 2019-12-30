@@ -1,6 +1,7 @@
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import de.ironjan.graphhopper.geocoding.Coordinate;
+import de.ironjan.graphhopper.levelextension.LowLevelRouting;
 
 public class EntranceRoutingWrapper {
     private final LowLevelRouting routing;

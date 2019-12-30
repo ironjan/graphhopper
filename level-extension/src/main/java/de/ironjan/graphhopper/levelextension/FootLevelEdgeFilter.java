@@ -1,6 +1,7 @@
+package de.ironjan.graphhopper.levelextension;
+
 import com.graphhopper.routing.util.EdgeFilter;
 import com.graphhopper.routing.util.FlagEncoder;
-import com.graphhopper.routing.util.FootFlagLevelEncoder;
 import com.graphhopper.util.EdgeIteratorState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

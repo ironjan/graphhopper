@@ -1,3 +1,5 @@
+package de.ironjan.graphhopper.levelextension;
+
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.weighting.ShortestWeighting;
 import com.graphhopper.routing.weighting.Weighting;
