@@ -2,6 +2,9 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import com.graphhopper.storage.GraphHopperStorage;
 import com.graphhopper.storage.NodeAccess;
+import de.ironjan.graphhopper.geocoding.Coordinate;
+import de.ironjan.graphhopper.geocoding.Geocoding;
+import de.ironjan.graphhopper.geocoding.Poi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,7 +128,7 @@ public class Main {
 
     private void runFuTest() {
 //        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), geocoding.getPoiByName("Fürstenallee F2"));
-//        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new Poi("Fürstenallee FU", 51.73168, 8.73467, -1d));
+//        singleTest(geocoding.getPoiByName("Fürstenallee Eingang"), new de.ironjan.graphhopper.geocoding.Poi("Fürstenallee FU", 51.73168, 8.73467, -1d));
         singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.343"));
         singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.511"));
         singleTest(geocoding.getByName("Treppenhaus Nord"), geocoding.getByName("FU.237"));
@@ -162,11 +165,11 @@ public class Main {
         PoiRoutingWrapper routingWrapper = new PoiRoutingWrapper(hopper);
         StringBuilder poisSb = new StringBuilder();
         for (Poi poi: pois){
-            poisSb.append(poi.name);
+            poisSb.append(poi.getName());
             poisSb.append(",");
         }
 
-        LOGGER.debug("POI Routing from {} to {} via {}", A.name, B.name, poisSb);
+        LOGGER.debug("POI Routing from {} to {} via {}", A.getName(), B.getName(), poisSb);
         PathWrapper route = routingWrapper.route(A, B);
         PathPrinter.print("FootLevel LevelEF", route);
 

@@ -1,3 +1,5 @@
+package de.ironjan.graphhopper.geocoding;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class Geocoding {
         otherSources.add(geocoding);
     }
     private void add(Poi poi) {
-        knownPois.put(poi.name, poi);
+        knownPois.put(poi.getName(), poi);
     }
 
     private void addAll(Poi... pois) {

@@ -1,3 +1,5 @@
+package de.ironjan.graphhopper.geocoding;
+
 import com.carrotsearch.hppc.LongArrayList;
 import com.graphhopper.reader.ReaderElement;
 import com.graphhopper.reader.ReaderNode;

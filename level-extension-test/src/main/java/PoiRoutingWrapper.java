@@ -1,5 +1,7 @@
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
+import de.ironjan.graphhopper.geocoding.Coordinate;
+import de.ironjan.graphhopper.geocoding.Poi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +18,8 @@ public class PoiRoutingWrapper {
     }
 
     public PathWrapper route(Poi a, Poi b) {
-        List<Coordinate> entrancesOfA = a.entrances;
-        List<Coordinate> entrancesOfB = b.entrances;
+        List<Coordinate> entrancesOfA = a.getEntrances();
+        List<Coordinate> entrancesOfB = b.getEntrances();
 
         ArrayList<PathWrapper> routes = new ArrayList<>(entrancesOfA.size() * entrancesOfB.size());
 
@@ -32,7 +34,7 @@ public class PoiRoutingWrapper {
 
 
         Logger logger = LoggerFactory.getLogger(PoiRoutingWrapper.class.getName());
-        logger.debug("Found {} routes from {} to {}",routes.size(), a.name, b.name);
+        logger.debug("Found {} routes from {} to {}",routes.size(), a.getName(), b.getName());
         for (PathWrapper p : routes) {
             logger.debug("{}m -- {}",p.getDistance(), p);
         }

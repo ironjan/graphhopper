@@ -1,10 +1,12 @@
+package de.ironjan.graphhopper.geocoding;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Poi{
-    final String name;
-    final List<Coordinate> entrances = new ArrayList<>();
+    private final String name;
+    private final List<Coordinate> entrances = new ArrayList<>();
 
     public Poi(String name, Coordinate... entrances) {
         this.name = name;
@@ -24,5 +26,13 @@ public class Poi{
     public Poi(String name, List<Coordinate> cList) {
         this.name = name;
         this.entrances.addAll(cList);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Coordinate> getEntrances() {
+        return entrances;
     }
 }

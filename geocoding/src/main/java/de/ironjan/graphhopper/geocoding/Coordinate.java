@@ -1,5 +1,7 @@
+package de.ironjan.graphhopper.geocoding;
+
 public class Coordinate {
-    final double lat, lon, lvl;
+    public final double lat, lon, lvl;
 
     public Coordinate(String name, double lat, double lon, double lvl) {
         this(lat,lon,lvl);
@@ -13,7 +15,7 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return "Coordinate(" +
+        return "de.ironjan.graphhopper.geocoding.Coordinate(" +
                 lat + ", " +
                 lon + ", " +
                 lvl + ')';
