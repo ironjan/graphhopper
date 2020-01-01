@@ -500,4 +500,8 @@ public class InstructionsFromEdges implements Path.EdgeVisitor {
                 + prevInstruction.getTime());
     }
 
+    protected Instruction getLastAddedInstruction(){
+        return ways.get(ways.size()-1);
+    }
+
 }
