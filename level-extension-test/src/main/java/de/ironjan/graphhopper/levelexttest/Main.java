@@ -176,8 +176,12 @@ public class Main {
             poisSb.append(poi.getName());
             poisSb.append(",");
         }
+        String via = poisSb.toString();
+        if(via.isEmpty()) {
+           via = "<none>";
+        }
 
-        LOGGER.debug("POI Routing from {} to {} via {}", A.getName(), B.getName(), poisSb);
+        LOGGER.debug("POI Routing from {} to {} via {}", A.getName(), B.getName(), via);
         PathWrapper route = routingWrapper.route(A, B);
         PathPrinter.print("FootLevel LevelEF", route);
 
