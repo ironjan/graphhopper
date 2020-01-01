@@ -16,9 +16,3 @@ build:
   tags:
     - shared
 
-test:
-  stage: test
-  script:
-    - mvn $MAVEN_CLI_OPTS test
-  tags:
-    - shared
