@@ -10,9 +10,11 @@ import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.TraversalMode;
 import com.graphhopper.storage.Graph;
 import com.graphhopper.storage.index.QueryResult;
-import com.graphhopper.util.PathMerger;
+import com.graphhopper.util.Instruction;
 import com.graphhopper.util.Translation;
 import com.graphhopper.util.TranslationMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -32,10 +34,8 @@ public class LowLevelRouting {
     }
 
     public PathWrapper getRoute(double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
-        EdgeFilter fromFilter;
-        EdgeFilter toFilter;
-            fromFilter = new FootLevelEdgeFilter(encoder, fromLvl);
-            toFilter= new FootLevelEdgeFilter(encoder, toLvl);
+        EdgeFilter fromFilter = new FootLevelEdgeFilter(encoder, fromLvl);
+        EdgeFilter toFilter = new FootLevelEdgeFilter(encoder, toLvl);
 
         QueryResult fromQr = hopper.getLocationIndex().findClosest(fromLat, fromLon, fromFilter);
         QueryResult toQr = hopper.getLocationIndex().findClosest(toLat, toLon, toFilter);
