@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILE="95131"
+FILE="saw"
 MAPS_FOLDER="$HOME/projects/maps"
 MAP_START_POS="50.2836424,11.6190666"
 MAP_START_ZOOM="17"

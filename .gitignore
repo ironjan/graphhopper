@@ -41,4 +41,4 @@ local.properties
 package-lock.json
 .attach_pid*
 logs/
-android/app/src/main/res/raw/95131.ghz
+android/app/src/main/res/raw/*.ghz
