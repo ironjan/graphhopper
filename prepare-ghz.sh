@@ -51,3 +51,5 @@ osmosis --rx file=$INPUT_FILE --mapfile-writer file=$MAP_FILE map-start-position
 pushd $GH_FOLDER
 zip -r ${FILE}.ghz *
 popd
+
+cp -v $GH_FOLDER/${FILE}.ghz ./android/app/src/main/res/raw/
