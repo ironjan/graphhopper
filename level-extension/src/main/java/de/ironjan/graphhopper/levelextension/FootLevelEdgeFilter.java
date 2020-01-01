@@ -30,7 +30,7 @@ public class FootLevelEdgeFilter implements EdgeFilter {
         }
 
         boolean isMatch = expectedLevel == level;
-//        logger.debug("Edge {} accepted? {}", edgeState.getName(), isMatch);
+        logger.debug("Edge {} accepted when looking for level {}? {}", edgeState, expectedLevel, isMatch);
         return isMatch;
     }
 }
