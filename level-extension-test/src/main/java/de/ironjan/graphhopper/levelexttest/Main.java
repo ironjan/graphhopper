@@ -1,3 +1,5 @@
+package de.ironjan.graphhopper.levelexttest;
+
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import com.graphhopper.storage.GraphHopperStorage;
@@ -26,6 +28,10 @@ public class Main {
         String graphFolder = args[1];
         DirectoryDeleter.deleteDirectory(graphFolder);
 
+        if(args.length > 2 && "import".equals(args[2])) {
+            GraphLoader.importAndExit(osmFile, graphFolder);
+            System.exit(0);
+        }
         GraphHopper hopper = GraphLoader.get(osmFile, graphFolder);
         new Main(hopper).runLatLonTest(osmFile);
 

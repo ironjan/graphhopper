@@ -1,3 +1,5 @@
+package de.ironjan.graphhopper.levelexttest;
+
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import de.ironjan.graphhopper.geocoding.Coordinate;
