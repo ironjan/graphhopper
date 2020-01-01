@@ -2,6 +2,7 @@ package com.graphhopper.android;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
@@ -23,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
@@ -38,6 +40,7 @@ import com.graphhopper.util.StopWatch;
 import org.oscim.android.MapView;
 import org.oscim.android.canvas.AndroidGraphics;
 import org.oscim.backend.canvas.Bitmap;
+import org.oscim.backend.canvas.Color;
 import org.oscim.core.GeoPoint;
 import org.oscim.event.Gesture;
 import org.oscim.event.GestureListener;
@@ -56,13 +59,18 @@ import org.oscim.tiling.source.mapfile.MapFileTileSource;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 import de.ironjan.graphhopper.levelextension.LowLevelRouting;
+import de.ironjan.overpass.OverpassElement;
+import de.ironjan.overpass.OverpassResponse;
 
 public class MainActivity extends Activity {
     private static final int NEW_MENU_ID = Menu.FIRST + 1;
@@ -83,6 +91,8 @@ public class MainActivity extends Activity {
     private File mapsFolder;
     private ItemizedLayer<MarkerItem> itemizedLayer;
     private PathLayer pathLayer;
+    private String TAG = MainActivity.class.getSimpleName();
+    private PathLayer opLayer;
 
     protected boolean onLongPress(GeoPoint p) {
         if (!isReady())
@@ -155,6 +165,8 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+        loadOverpassExample();
+
     }
 
     @Override
@@ -365,16 +377,114 @@ public class MainActivity extends Activity {
         mapView.map().layers().add(new BuildingLayer(mapView.map(), l));
         mapView.map().layers().add(new LabelLayer(mapView.map(), l));
 
+
         // Markers layer
         itemizedLayer = new ItemizedLayer<>(mapView.map(), (MarkerSymbol) null);
         mapView.map().layers().add(itemizedLayer);
 
         // Map position
-        GeoPoint mapCenter = new GeoPoint(50.2836424,11.6190666);//tileSource.getMapInfo().boundingBox.getCenterPoint();
+        GeoPoint mapCenter = new GeoPoint(50.2836424, 11.6190666);//tileSource.getMapInfo().boundingBox.getCenterPoint();
         mapView.map().setMapPosition(mapCenter.getLatitude(), mapCenter.getLongitude(), 1 << 15);
 
         setContentView(mapView);
         loadGraphStorage();
+        drawOverpassExample();
+    }
+
+    private void drawOverpassExample() {
+        if(opLayer!=null){
+            mapView.map().layers().remove(opLayer);
+            Log.d(TAG, "Removed op layer");
+        }
+
+        Style style = Style.builder()
+                .fixed(true)
+                .generalization(Style.GENERALIZATION_SMALL)
+                .strokeColor(Color.RED)
+                .fillColor(Color.CYAN)
+                .fillAlpha(0.75f)
+                .strokeWidth(4*getResources().getDisplayMetrics().density)
+                .build();
+        opLayer = new PathLayer(mapView.map(), style);
+        List<GeoPoint> points = new ArrayList();
+        Collections.addAll(points, new GeoPoint[]{
+                new GeoPoint(50.2833069, 11.6405699),
+                new GeoPoint(50.2832737, 11.6405915),
+                new GeoPoint(50.2832483, 11.6406080),
+                new GeoPoint(50.2832163, 11.6404800),
+                new GeoPoint(50.2832749, 11.6404419),
+                new GeoPoint(50.2833029, 11.6405543),
+                new GeoPoint(50.2833069, 11.6405699),
+        });
+        opLayer.setPoints(points);
+        mapView.map().layers().add(opLayer);
+        mapView.map().updateMap(true);
+        Log.d(TAG, "Added op layer");
+/*
+    {
+      "type": "way",
+      "id": 402396741,
+      "nodes": [
+        404625872,
+        4048066664,
+        4048066656,
+        4048066639,
+        404625870,
+        4048066667,
+        404625872
+      ],
+      "tags": {
+        "access": "customers",
+        "addr:city": "Paderborn",
+        "addr:housenumber": "29",
+        "addr:postcode": "33102",
+        "addr:street": "Bahnhofstraße",
+        "indoor": "room",
+        "level": "0",
+        "name": "Relay",
+        "opening_hours": "Mo-Fr 06:00-20:00; Sa 07:00-19:00; Su 08:00-19:00",
+        "room": "shop",
+        "shop": "books"
+      }
+    },
+
+    {
+      "type": "node",
+      "id": 404625872,
+      "lat": 51.7133069,
+      "lon": 8.7405699
+    },
+    {
+      "type": "node",
+      "id": 4048066664,
+      "lat": 51.7132737,
+      "lon": 8.7405915
+    },
+    {
+      "type": "node",
+      "id": 4048066656,
+      "lat": 51.7132483,
+      "lon": 8.7406080
+    },
+    {
+      "type": "node",
+      "id": 4048066639,
+      "lat": 51.7132163,
+      "lon": 8.7404800
+    },
+    {
+      "type": "node",
+      "id": 404625870,
+      "lat": 51.7132749,
+      "lon": 8.7404419
+    },
+    {
+      "type": "node",
+      "id": 4048066667,
+      "lat": 51.7133029,
+      "lon": 8.7405543
+    },
+ */
     }
 
     void loadGraphStorage() {
@@ -400,6 +510,43 @@ public class MainActivity extends Activity {
                 finishPrepare();
             }
         }.execute();
+    }
+
+    private void loadOverpassExample() {
+        try {
+            InputStream inputStream = getResources().openRawResource(R.raw.response);
+            Scanner sc = new Scanner(inputStream);
+            StringBuilder sb = new StringBuilder();
+            while (sc.hasNextLine()) {
+                sb.append(sc.nextLine());
+            }
+            String response = sb.toString();
+            Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
+            Log.d(TAG, response);
+            parseOverpassResponse(response);
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parseOverpassResponse(String response) {
+        Gson gson = new Gson();
+
+        OverpassResponse overpassResponse = gson.fromJson(response, OverpassResponse.class);
+
+        List<OverpassElement> elements = overpassResponse.getElements();
+        ArrayList<OverpassElement> ways = new ArrayList<>();
+        ArrayList<OverpassElement> nodes = new ArrayList<>();
+        for (OverpassElement e: elements) {
+            if(e.isWay()) {
+                ways.add(e);
+            }else {
+                nodes.add(e);
+            }
+        }
+
+        Log.d(TAG, "Got " + elements.size() + " elements: " + nodes.size() + " nodes and " + ways.size() + " ways.");
     }
 
     private void finishPrepare() {
@@ -459,6 +606,7 @@ public class MainActivity extends Activity {
                     pathLayer = createPathLayer(resp);
                     mapView.map().layers().add(pathLayer);
                     mapView.map().updateMap(true);
+                    drawOverpassExample();
                 } else {
                     logUser("Error:" + resp.getErrors());
                 }
