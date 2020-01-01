@@ -1,13 +1,10 @@
-variables:
-  MAVEN_CLI_OPTS: ""
-  MAVEN_OPTS: "-Dmaven.repo.local=cache/.m2/repository"
-
 cache:
   paths:
     - cache/.m2/repository/
 
-run_measurement:
-  stage: test
+build:
+  stage: build
   script:
-    # make this script exit if a command fails, a variable is missing etc.
     - mvn compile  -DskipTests
+  tags:
+    - shared
