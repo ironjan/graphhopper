@@ -58,7 +58,7 @@ dependencies {
 
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'org.slf4j:slf4j-android:1.7.25'
-    compile "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {

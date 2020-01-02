@@ -291,7 +291,7 @@ public class MainActivity extends Activity {
             if (tmp.endsWith("-gh"))
                 tmp = tmp.substring(0, tmp.length() - 3);
 
-            tmp = AndroidHelper.getFileName(tmp);
+            tmp = AndroidHelper.INSTANCE.getFileName(tmp);
             nameToFullName.put(tmp, fullName);
         }
         nameList.clear();
@@ -330,7 +330,7 @@ public class MainActivity extends Activity {
         new GHAsyncTask<Void, Integer, Object>() {
             protected Object saveDoInBackground(Void... _ignore)
                     throws Exception {
-                String localFolder = Helper.pruneFileEnd(AndroidHelper.getFileName(downloadURL));
+                String localFolder = Helper.pruneFileEnd(AndroidHelper.INSTANCE.getFileName(downloadURL));
                 localFolder = new File(mapsFolder, localFolder + "-gh").getAbsolutePath();
                 log("downloading & unzipping " + downloadURL + " to " + localFolder);
                 AndroidDownloader downloader = new AndroidDownloader();
