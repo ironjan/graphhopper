@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
@@ -6,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.graphhopper.android"
-        minSdkVersion 10
+        minSdkVersion 14
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 22
     }
@@ -56,4 +58,9 @@ dependencies {
 
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'org.slf4j:slf4j-android:1.7.25'
+    compile "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
