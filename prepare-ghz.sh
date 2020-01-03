@@ -49,6 +49,8 @@ rm -rv $GH_FOLDER
 
 osmosis --rx file=$INPUT_FILE --mapfile-writer file=$MAP_FILE map-start-position=$MAP_START_POS map-start-zoom=$MAP_START_ZOOM bbox=$BBOX
 pushd $GH_FOLDER
+cp $INPUT_FILE .
+date >> ./timestamp
 zip -r ${FILE}.ghz *
 popd
 
