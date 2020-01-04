@@ -7,7 +7,7 @@ import com.graphhopper.storage.NodeAccess;
 import de.ironjan.graphhopper.extensions_core.Coordinate;
 import de.ironjan.graphhopper.geocoding.Geocoding;
 import de.ironjan.graphhopper.geocoding.Poi;
-import de.ironjan.graphhopper.levelextension.graph.GraphLoader;
+import de.ironjan.graphhopper.levelextension.GraphLoader;
 import de.ironjan.graphhopper.levelextension.routing.LowLevelRouting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

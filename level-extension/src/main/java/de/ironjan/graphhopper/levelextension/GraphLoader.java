@@ -1,4 +1,4 @@
-package de.ironjan.graphhopper.levelextension.graph;
+package de.ironjan.graphhopper.levelextension;
 
 import com.graphhopper.GraphHopper;
 import com.graphhopper.reader.osm.GraphHopperOSM;

@@ -13,7 +13,7 @@ import com.graphhopper.storage.index.QueryResult;
 import com.graphhopper.util.Translation;
 import com.graphhopper.util.TranslationMap;
 import de.ironjan.graphhopper.levelextension.graph.FootLevelEdgeFilter;
-import de.ironjan.graphhopper.levelextension.graph.GraphLoader;
+import de.ironjan.graphhopper.levelextension.GraphLoader;
 
 import java.util.ArrayList;
 import java.util.Locale;
