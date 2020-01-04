@@ -14,6 +14,8 @@ import com.graphhopper.util.Translation;
 import com.graphhopper.util.TranslationMap;
 import de.ironjan.graphhopper.levelextension.graph.FootLevelEdgeFilter;
 import de.ironjan.graphhopper.levelextension.GraphLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -24,8 +26,9 @@ public class LowLevelRouting {
     private WrappedShortestWeighting weighting;
 
     private final GraphHopper hopper;
+    private Logger logger = LoggerFactory.getLogger(LowLevelRouting.class.getName());
 
-     public LowLevelRouting(GraphHopper hopper) {
+    public LowLevelRouting(GraphHopper hopper) {
         super();
          this.hopper = hopper;
         encoder = GraphLoader.getEncodingManager().getEncoder("foot_level");
@@ -38,6 +41,9 @@ public class LowLevelRouting {
 
         QueryResult fromQr = hopper.getLocationIndex().findClosest(fromLat, fromLon, fromFilter);
         QueryResult toQr = hopper.getLocationIndex().findClosest(toLat, toLon, toFilter);
+
+        logger.debug("fromQr: {}", fromQr);
+        logger.debug("toQr: {}", toQr);
 
         fromQr.isValid();
         toQr.isValid();

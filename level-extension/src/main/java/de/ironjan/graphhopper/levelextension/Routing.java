@@ -17,7 +17,7 @@ public class Routing {
     }
 
     public PathWrapper route(double fromLat, double fromLon, double fromLvl, double toLat, double toLon, double toLvl) {
-        return lowLevelRouting.getRoute(fromLat, fromLon, fromLvl, toLat, toLon, toLvl);
+        return lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
     }
 
 
