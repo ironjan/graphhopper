@@ -7,6 +7,7 @@ import com.graphhopper.reader.ReaderWay;
 import com.graphhopper.reader.osm.OSMInput;
 import com.graphhopper.reader.osm.OSMInputFile;
 import com.graphhopper.util.StopWatch;
+import de.ironjan.graphhopper.extensions_core.Coordinate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

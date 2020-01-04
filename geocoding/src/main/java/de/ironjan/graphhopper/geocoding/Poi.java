@@ -1,5 +1,7 @@
 package de.ironjan.graphhopper.geocoding;
 
+import de.ironjan.graphhopper.extensions_core.Coordinate;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

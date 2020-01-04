@@ -4,7 +4,7 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import com.graphhopper.storage.GraphHopperStorage;
 import com.graphhopper.storage.NodeAccess;
-import de.ironjan.graphhopper.geocoding.Coordinate;
+import de.ironjan.graphhopper.extensions_core.Coordinate;
 import de.ironjan.graphhopper.geocoding.Geocoding;
 import de.ironjan.graphhopper.geocoding.Poi;
 import de.ironjan.graphhopper.levelextension.graph.GraphLoader;

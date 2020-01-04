@@ -1,4 +1,4 @@
-package de.ironjan.graphhopper.geocoding;
+package de.ironjan.graphhopper.extensions_core;
 
 public class Coordinate {
     public final double lat, lon, lvl;
