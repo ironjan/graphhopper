@@ -102,6 +102,10 @@ public class Main {
             runFloorTest();
         }
 
+        if(osmFile.contains("saw")) {
+            singleTest("SAW", 50.28271,11.62599,50.283225,11.626027,0,0);
+        }
+
         if (osmFile.contains("area_test")) {
             String[] poiNames = {"Southwest Building", "East Block", "Center Church", "Northwest Building", "South Point"};
 
