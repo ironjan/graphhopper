@@ -5,7 +5,7 @@ import com.graphhopper.PathWrapper;
 import de.ironjan.graphhopper.extensions_core.Coordinate;
 import de.ironjan.graphhopper.levelextension.routing.LowLevelRouting;
 
-public abstract class Routing {
+public class Routing {
     private final LowLevelRouting lowLevelRouting;
 
     public Routing(GraphHopper hopper) {
