@@ -1,4 +1,4 @@
-package de.ironjan.graphhopper.levelextension;
+package de.ironjan.graphhopper.levelextension.routing;
 /*
  *  Licensed to GraphHopper GmbH under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for
@@ -19,16 +19,14 @@ package de.ironjan.graphhopper.levelextension;
 
 import com.graphhopper.PathWrapper;
 import com.graphhopper.routing.Path;
-import com.graphhopper.routing.profiles.BooleanEncodedValue;
 import com.graphhopper.routing.profiles.EncodedValueLookup;
-import com.graphhopper.routing.profiles.Roundabout;
-import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.storage.Graph;
 import com.graphhopper.util.*;
 import com.graphhopper.util.details.PathDetailsBuilderFactory;
 import com.graphhopper.util.details.PathDetailsFromEdges;
 import com.graphhopper.util.exceptions.ConnectionNotFoundException;
+import de.ironjan.graphhopper.levelextension.routing.InstructionsFromEdges;
 
 import java.util.ArrayList;
 import java.util.Collections;

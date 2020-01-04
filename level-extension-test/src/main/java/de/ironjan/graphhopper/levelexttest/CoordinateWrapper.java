@@ -3,12 +3,12 @@ package de.ironjan.graphhopper.levelexttest;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import de.ironjan.graphhopper.geocoding.Coordinate;
-import de.ironjan.graphhopper.levelextension.LowLevelRouting;
+import de.ironjan.graphhopper.levelextension.routing.LowLevelRouting;
 
-public class EntranceRoutingWrapper {
+public class CoordinateWrapper {
     private final LowLevelRouting routing;
 
-    public EntranceRoutingWrapper(GraphHopper hopper) {
+    public CoordinateWrapper(GraphHopper hopper) {
         routing = new LowLevelRouting(hopper);
     }
 

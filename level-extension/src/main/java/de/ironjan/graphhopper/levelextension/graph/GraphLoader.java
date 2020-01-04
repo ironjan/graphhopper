@@ -1,8 +1,9 @@
-package de.ironjan.graphhopper.levelextension;
+package de.ironjan.graphhopper.levelextension.graph;
 
 import com.graphhopper.GraphHopper;
 import com.graphhopper.reader.osm.GraphHopperOSM;
 import com.graphhopper.routing.util.EncodingManager;
+import de.ironjan.graphhopper.levelextension.graph.FootFlagLevelEncoder;
 
 public class GraphLoader {
     private static EncodingManager em;

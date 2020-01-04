@@ -1,4 +1,4 @@
-package de.ironjan.graphhopper.levelextension;
+package de.ironjan.graphhopper.levelextension.routing;
 
 /*
  *  Licensed to GraphHopper GmbH under one or more contributor
@@ -20,12 +20,12 @@ package de.ironjan.graphhopper.levelextension;
 
 import com.graphhopper.routing.Path;
 import com.graphhopper.routing.profiles.*;
-import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.storage.Graph;
 import com.graphhopper.storage.IntsRef;
 import com.graphhopper.util.*;
+import de.ironjan.graphhopper.levelextension.graph.FootFlagLevelEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

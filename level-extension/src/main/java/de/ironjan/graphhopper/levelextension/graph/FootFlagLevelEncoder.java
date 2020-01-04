@@ -1,4 +1,4 @@
-package de.ironjan.graphhopper.levelextension;
+package de.ironjan.graphhopper.levelextension.graph;
 
 import com.graphhopper.reader.ReaderWay;
 import com.graphhopper.routing.profiles.DecimalEncodedValue;

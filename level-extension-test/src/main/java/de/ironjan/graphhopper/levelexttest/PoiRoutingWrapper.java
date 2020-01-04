@@ -13,10 +13,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public class PoiRoutingWrapper {
-    private final EntranceRoutingWrapper entranceRouting;
+    private final CoordinateWrapper entranceRouting;
 
     public PoiRoutingWrapper(GraphHopper hopper) {
-        entranceRouting = new EntranceRoutingWrapper(hopper);
+        entranceRouting = new CoordinateWrapper(hopper);
     }
 
     public PathWrapper route(Poi a, Poi b) {

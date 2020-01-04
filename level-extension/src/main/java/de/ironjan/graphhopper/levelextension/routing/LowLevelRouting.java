@@ -1,4 +1,4 @@
-package de.ironjan.graphhopper.levelextension;
+package de.ironjan.graphhopper.levelextension.routing;
 
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
@@ -10,11 +10,10 @@ import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.TraversalMode;
 import com.graphhopper.storage.Graph;
 import com.graphhopper.storage.index.QueryResult;
-import com.graphhopper.util.Instruction;
 import com.graphhopper.util.Translation;
 import com.graphhopper.util.TranslationMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.ironjan.graphhopper.levelextension.graph.FootLevelEdgeFilter;
+import de.ironjan.graphhopper.levelextension.graph.GraphLoader;
 
 import java.util.ArrayList;
 import java.util.Locale;
