@@ -91,6 +91,7 @@
         <module>level-extension</module>
         <module>level-extension-test</module>
         <module>geocoding</module>
+        <module>graphhopper-extension-core</module>
     </modules>
     <build>
         <plugins>
