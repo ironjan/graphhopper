@@ -1,10 +1,10 @@
 #!/bin/bash
 
-FILE="saw"
+FILE="uni_paderborn"
 MAPS_FOLDER="$HOME/projects/maps"
-MAP_START_POS="50.2836424,11.6190666"
-MAP_START_ZOOM="17"
-BBOX="50.26696,11.5864563,50.3011828,11.6777802"
+MAP_START_POS="51.7083,8.7698"
+MAP_START_ZOOM="18"
+BBOX="51.6974631,8.761381,51.7191573,8.7782919"
 
 INPUT_FILE="$MAPS_FOLDER/${FILE}.osm"
 GH_FOLDER="$MAPS_FOLDER/${FILE}-gh/"
@@ -47,11 +47,13 @@ fi
 rm -rv $GH_FOLDER
 ./graphhopper.sh -a import -i $INPUT_FILE
 
-osmosis --rx file=$INPUT_FILE --mapfile-writer file=$MAP_FILE map-start-position=$MAP_START_POS map-start-zoom=$MAP_START_ZOOM bbox=$BBOX
+osmosis --rx file=$INPUT_FILE enableDateParsing=false --mapfile-writer file=$MAP_FILE map-start-position=$MAP_START_POS map-start-zoom=$MAP_START_ZOOM bbox=$BBOX
+
 pushd $GH_FOLDER
 cp $INPUT_FILE .
-date >> ./timestamp
+date >> ./_timestamp
 zip -r ${FILE}.ghz *
 popd
 
 cp -v $GH_FOLDER/${FILE}.ghz ./android/app/src/main/res/raw/
+cp -v $GH_FOLDER/${FILE}.ghz ~/projects/arionav-framework/sample/src/main/res/raw/
