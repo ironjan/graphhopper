@@ -1,16 +1,16 @@
 #!/bin/bash
 
 
-FILE="saw"
-MAP_START_POS="50.2825506,11.6257667"
-BBOX="50.2740918,11.6082573,50.291094,11.6432762"
+#FILE="saw"
+#MAP_START_POS="50.2825506,11.6257667"
+#BBOX="50.2740918,11.6082573,50.291094,11.6432762"
 
 # todo extract bbox from osm
 # todo compute start pos as center
 
-#FILE="uni_paderborn"
-#MAP_START_POS="51.7083,8.7698"
-#BBOX="51.6974631,8.761381,51.7191573,8.7782919"
+FILE="uni_paderborn"
+MAP_START_POS="51.7083,8.7698"
+BBOX="51.6974631,8.761381,51.7191573,8.7782919"
 
 MAPS_FOLDER="$HOME/projects/maps"
 MAP_START_ZOOM="18"
@@ -52,14 +52,14 @@ if [ "$1" == "-p" ]; then
   exit 0
 fi
 
-rm -rv $GH_FOLDER
-./graphhopper.sh -a import -i $INPUT_FILE
+#rm -rv $GH_FOLDER
+#./graphhopper.sh -a import -i $INPUT_FILE
 
 osmosis --rx file=$INPUT_FILE enableDateParsing=false --mapfile-writer file=$MAP_FILE map-start-position=$MAP_START_POS map-start-zoom=$MAP_START_ZOOM bbox=$BBOX
 
 pushd $GH_FOLDER
 cp $INPUT_FILE .
-date >> ./_timestamp
+date > ./_timestamp
 zip -r ${FILE}.ghz *
 popd
 
