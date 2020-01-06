@@ -1,4 +1,4 @@
-package de.ironjan.graphhopper.levelexttest;
+package de.ironjan.graphhopper.util;
 
 import org.slf4j.LoggerFactory;
 
