@@ -8,7 +8,8 @@ import de.ironjan.graphhopper.extensions_core.Coordinate;
 import de.ironjan.graphhopper.geocoding.Geocoding;
 import de.ironjan.graphhopper.geocoding.Poi;
 import de.ironjan.graphhopper.levelextension.GraphLoader;
-import de.ironjan.graphhopper.levelextension.routing.LowLevelRouting;
+import de.ironjan.graphhopper.levelextension.Routing;
+import de.ironjan.graphhopper.util.DirectoryDeleter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ import java.io.IOException;
 
 public class Main {
     private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
-    private final GraphHopper hopper;
+    private GraphHopper hopper;
     private Geocoding geocoding;
 
     public Main(GraphHopper hopper) {
@@ -32,12 +33,12 @@ public class Main {
             GraphLoader.importAndExit(osmFile, graphFolder);
             System.exit(0);
         }
-        GraphHopper hopper = GraphLoader.get(osmFile, graphFolder);
-        new Main(hopper).runLatLonTest(osmFile);
+        GraphHopper hopper = GraphLoader.importOrLoad(osmFile, graphFolder);
+        new Main(hopper).runLatLonTest(osmFile,graphFolder);
 
     }
 
-    private void runLatLonTest(String osmFile) {
+    private void runLatLonTest(String osmFile, String graphFolder) {
         Geocoding fromPois = Geocoding.Loader.fromPois(
                 new Poi("Karlsplatz", 48.1394991, 11.5659233, -0d),
                 new Poi("Stachuspassage -1", 48.1394991, 11.5659233, -1d),
@@ -91,7 +92,7 @@ public class Main {
         }
 
         if (osmFile.contains("room")) {
-            singleTest("Just a test", 51.7260712, 8.7387656, 51.6995871, 8.7423705, 0, 0);
+            singleTest("Just a test", 51.7260712, 8.7387656, 0, 51.6995871, 8.7423705, 0);
         }
 
         if (osmFile.contains("place_test")) {
@@ -103,12 +104,16 @@ public class Main {
         }
 
         if(osmFile.contains("saw")) {
-            singleTest("SAW", 50.28271,11.62599,50.283225,11.626027,0,0);
+            singleTest("SAW", 50.28271,11.62599, 0, 50.283225,11.626027, 0);
         }
 
         if(osmFile.contains("uni_pader")){
-            singleTest("test1", 51.707865,8.76944,51.708594,8.770294,0,0);
-            singleTest("test2", 51.282368,11.625834,51.282931,11.626636,0,0);
+//            singleTest("test1", 51.707865,8.76944,51.708594,8.770294,0,0);
+//            singleTest("test2", 51.282368,11.625834,51.282931,11.626636,0,0);
+            GraphLoader.importAndExit(osmFile, graphFolder);
+            hopper = GraphLoader.loadExisting(graphFolder);
+
+            singleTest("test3", 51.708536,8.769949,0.0, 51.70858,8.769919,0);
         }
 
         if (osmFile.contains("area_test")) {
@@ -198,15 +203,15 @@ public class Main {
 
     private void singleTest(Coordinate a, Coordinate b) {
         String msg = String.format("%s to %s", a.toString(), b.toString());
-        singleTest(msg, a.lat, a.lon, b.lat, b.lon, a.lvl, b.lvl);
+        singleTest(msg, a.lat, a.lon, a.lvl, b.lat, b.lon, b.lvl);
     }
 
-    private void singleTest(String run, double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
+    private void singleTest(String run, double fromLat, double fromLon, double fromLvl, double toLat, double toLon, double toLvl) {
         LOGGER.debug("Route {} from {},{},{} to {},{},{}. Edge based? {}", run, fromLat, fromLon, fromLvl, toLat, toLon, toLvl, false);
 
-        LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper);
+        Routing lowLevelRouting = new Routing(hopper);
 
-        PathWrapper route = lowLevelRouting.getRoute(fromLat, fromLon, fromLvl, toLat, toLon, toLvl);
+        PathWrapper route = lowLevelRouting.route(fromLat, fromLon, fromLvl, toLat, toLon, toLvl);
         PathPrinter.print("FootLevel LevelEF", route);
     }
 
