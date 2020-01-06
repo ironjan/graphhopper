@@ -106,6 +106,11 @@ public class Main {
             singleTest("SAW", 50.28271,11.62599,50.283225,11.626027,0,0);
         }
 
+        if(osmFile.contains("uni_pader")){
+            singleTest("test1", 51.707865,8.76944,51.708594,8.770294,0,0);
+            singleTest("test2", 51.282368,11.625834,51.282931,11.626636,0,0);
+        }
+
         if (osmFile.contains("area_test")) {
             String[] poiNames = {"Southwest Building", "East Block", "Center Church", "Northwest Building", "South Point"};
 
@@ -201,7 +206,7 @@ public class Main {
 
         LowLevelRouting lowLevelRouting = new LowLevelRouting(hopper);
 
-        PathWrapper route = lowLevelRouting.getRoute(fromLat, fromLon, toLat, toLon, fromLvl, toLvl);
+        PathWrapper route = lowLevelRouting.getRoute(fromLat, fromLon, fromLvl, toLat, toLon, toLvl);
         PathPrinter.print("FootLevel LevelEF", route);
     }
 
