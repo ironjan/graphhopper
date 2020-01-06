@@ -1,6 +1,7 @@
 package de.ironjan.graphhopper.extensions_core;
 
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Coordinate {
@@ -25,15 +26,30 @@ public class Coordinate {
     }
 
 
+    /**
+     * Creates a string representation of this {@see Coordinate} that can be parsed via {@see fromString}
+     * @return a parsable string representation
+     */
     public String asString() {
         return String.format(Locale.US, "%f,%f,%f", lat, lon, lvl);
     }
 
+    /**
+     * Parses the given String into a coordinate.
+     * @param s the string to be parsed
+     * @return the {@see Coordinate} the string was representing
+     * @throws IllegalArgumentException if {@see s} is in the wrong format
+     */
     public static Coordinate fromString(String s) {
-        Scanner sc = new Scanner(s);
-        double lat = sc.nextDouble();
-        double lon = sc.nextDouble();
-        double lvl = sc.nextDouble();
-        return new Coordinate(lat, lon, lvl);
+        try {
+            Scanner sc = new Scanner(s);
+            double lat = sc.nextDouble();
+            double lon = sc.nextDouble();
+            double lvl = sc.nextDouble();
+            sc.close();
+            return new Coordinate(lat, lon, lvl);
+        } catch (NoSuchElementException ignored){
+         throw new IllegalArgumentException("The given string is not in the correct format (lat,lon,lvl).");
+        }
     }
 }

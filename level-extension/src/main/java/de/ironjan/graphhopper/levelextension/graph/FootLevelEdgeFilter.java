@@ -23,6 +23,8 @@ public class FootLevelEdgeFilter implements EdgeFilter {
 
     @Override
     public boolean accept(EdgeIteratorState edgeState) {
+        logger.debug("Checking if edge {} is on level {}", edgeState, expectedLevel);
+        
         double level = encoder.getLevelFrom(edgeState.getFlags());
 
         if(Double.isNaN(expectedLevel)){

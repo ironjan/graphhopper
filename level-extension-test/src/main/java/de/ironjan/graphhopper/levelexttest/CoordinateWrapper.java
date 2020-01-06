@@ -13,7 +13,7 @@ public class CoordinateWrapper {
     }
 
     public PathWrapper route(Coordinate a, Coordinate b) {
-        return routing.getRoute(a.lat, a.lon, b.lat, b.lon, a.lvl, b.lvl);
+        return routing.getRoute(a.lat, a.lon, a.lvl, b.lat, b.lon, b.lvl);
     }
 }
 

@@ -33,6 +33,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * This class is based on {@link com.graphhopper.util.PathMerger} and uses an adapted {@link InstructionsFromEdges} class
+ * to add information about levels in the instructions.
+ *
  * This class merges multiple {@link Path} objects into one continuous object that
  * can be used in the {@link PathWrapper}. There will be a Path between every waypoint.
  * So for two waypoints there will be only one Path object. For three waypoints there will be
@@ -40,8 +43,6 @@ import java.util.List;
  * <p>
  * The instructions are generated per Path object and are merged into one continuous InstructionList.
  * The PointList per Path object are merged and optionally simplified.
- *
- * It is based on {@link com.graphhopper.util.PathMerger} and uses an adapted {@link InstructionsFromEdges} class
  */
 public class PathMerger extends com.graphhopper.util.PathMerger {
     private static final DouglasPeucker DP = new DouglasPeucker();

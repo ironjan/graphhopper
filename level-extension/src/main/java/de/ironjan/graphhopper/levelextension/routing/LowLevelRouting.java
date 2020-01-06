@@ -27,26 +27,35 @@ public class LowLevelRouting {
 
     private final GraphHopper hopper;
     private Logger logger = LoggerFactory.getLogger(LowLevelRouting.class.getName());
+    private TranslationMap trMap;
 
     public LowLevelRouting(GraphHopper hopper) {
         super();
          this.hopper = hopper;
         encoder = GraphLoader.getEncodingManager().getEncoder("foot_level");
         weighting = new WrappedShortestWeighting(encoder);
+        trMap = new TranslationMap().doImport();
     }
 
-    public PathWrapper getRoute(double fromLat, double fromLon, double toLat, double toLon, double fromLvl, double toLvl) {
+    public PathWrapper getRoute(double fromLat, double fromLon, double fromLvl, double toLat, double toLon, double toLvl) {
+        logger.debug("Requested route from {},{},{} to {},{},{}.", fromLat, fromLon, fromLvl, toLat, toLon, toLvl);
+
         EdgeFilter fromFilter = new FootLevelEdgeFilter(encoder, fromLvl);
         EdgeFilter toFilter = new FootLevelEdgeFilter(encoder, toLvl);
+
+        logger.debug("Constructed fromFilter and toFilter for finding closest edges/nodes.");
 
         QueryResult fromQr = hopper.getLocationIndex().findClosest(fromLat, fromLon, fromFilter);
         QueryResult toQr = hopper.getLocationIndex().findClosest(toLat, toLon, toFilter);
 
-        logger.debug("fromQr: {}", fromQr);
-        logger.debug("toQr: {}", toQr);
+        logger.debug("QueryResults for finding closest: fromQr = {}, toQr = {}.", fromQr, toQr);
 
-        fromQr.isValid();
-        toQr.isValid();
+        boolean hasInvalidQueryResult = !(fromQr.isValid() && toQr.isValid());
+        if(hasInvalidQueryResult) {
+            logger.warn("At least one of the query results is invalid. Returning null.");
+            // TODO improve this and drop level restriction for a second attempt?
+            return null;
+        }
 
         ArrayList<QueryResult> qrs = new ArrayList<>();
         qrs.add(fromQr);
@@ -58,9 +67,12 @@ public class LowLevelRouting {
 
         TraversalMode traversalMode = TraversalMode.NODE_BASED;
 
+        logger.debug("Constructed query graph for traversal.");
 
         Path path = new Dijkstra(queryGraph, weighting, traversalMode)
                 .calcPath(fromQr.getClosestNode(), toQr.getClosestNode());
+
+        logger.debug("Instantiated Dijkstra and computed the following path: {}.", path);
 
         ArrayList<Path> paths = new ArrayList<>();
         paths.add(path);
@@ -68,9 +80,10 @@ public class LowLevelRouting {
         PathWrapper pathWrapper = new PathWrapper();
         PathMerger merger = new PathMerger(graph, weighting);
         merger.setSimplifyResponse(false);
-        final TranslationMap trMap = new TranslationMap().doImport();
         Translation tr = trMap.getWithFallBack(Locale.GERMAN);
         merger.doWork(pathWrapper, paths, GraphLoader.getEncodingManager(), tr);
+
+        logger.debug("Wrapped the raw path via merger and added instructions: {}.", pathWrapper);
 
         return pathWrapper;
     }

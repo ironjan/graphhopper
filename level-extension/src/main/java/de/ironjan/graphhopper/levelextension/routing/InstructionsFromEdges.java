@@ -44,11 +44,9 @@ public class InstructionsFromEdges
         extends com.graphhopper.routing.InstructionsFromEdges
         implements Path.EdgeVisitor {
     private final FootFlagLevelEncoder encoder;
-    private String prefix = "foot_level";
     private EdgeIteratorState prevEdge;
     private double prevLevel = Double.NaN;
-    private Logger logger = LoggerFactory
-            .getLogger("MyInstructions");
+    private Logger logger = LoggerFactory.getLogger(InstructionsFromEdges.class);
 
     public InstructionsFromEdges(Graph graph, Weighting weighting, EncodedValueLookup evLookup,
                                  Translation tr, InstructionList ways) {
