@@ -114,6 +114,8 @@ public class Main {
             hopper = GraphLoader.loadExisting(graphFolder);
 
             singleTest("test3", 51.708536,8.769949,0.0, 51.70858,8.769919,0);
+            runFuTest();
+            singleTest(new Poi("F Main Entrance", 51.731985,8.7348993,0), geocoding.getByName("FU.511"));
         }
 
         if (osmFile.contains("area_test")) {
