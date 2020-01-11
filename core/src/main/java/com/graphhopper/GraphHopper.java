@@ -24,7 +24,7 @@ import com.graphhopper.reader.dem.*;
 import com.graphhopper.reader.osm.conditional.DateRangeParser;
 import com.graphhopper.routing.*;
 import com.graphhopper.routing.ch.CHAlgoFactoryDecorator;
-import com.graphhopper.routing.ch.PrepareContractionHierarchies;
+import com.graphhopper.routing.ch.CHRoutingAlgorithmFactory;
 import com.graphhopper.routing.lm.LMAlgoFactoryDecorator;
 import com.graphhopper.routing.profiles.DefaultEncodedValueFactory;
 import com.graphhopper.routing.profiles.EncodedValueFactory;
@@ -528,6 +528,7 @@ public class GraphHopper implements GraphHopperAPI {
         if (!flagEncodersStr.isEmpty() || !encodedValueStr.isEmpty()) {
             if (!encodedValueStr.isEmpty())
                 emBuilder.addAll(tagParserFactory, encodedValueStr);
+            registerCustomEncodedValues(emBuilder);
             if (!flagEncodersStr.isEmpty())
                 emBuilder.addAll(flagEncoderFactory, flagEncodersStr);
             emBuilder.setEnableInstructions(args.getBool("datareader.instructions", true));
@@ -759,6 +760,8 @@ public class GraphHopper implements GraphHopperAPI {
         if (lmFactoryDecorator.isEnabled())
             initLMAlgoFactoryDecorator();
 
+        ghStorage = new GraphHopperStorage(dir, encodingManager, hasElevation(), encodingManager.needsTurnCostsSupport(), defaultSegmentSize);
+
         List<CHProfile> chProfiles;
         if (chFactoryDecorator.isEnabled()) {
             initCHAlgoFactoryDecorator();
@@ -767,7 +770,8 @@ public class GraphHopper implements GraphHopperAPI {
             chProfiles = Collections.emptyList();
         }
 
-        ghStorage = new GraphHopperStorage(chProfiles, dir, encodingManager, hasElevation(), encodingManager.needsTurnCostsSupport(), defaultSegmentSize);
+        ghStorage.addCHGraphs(chProfiles);
+
 
         if (!new File(graphHopperFolder).exists())
             return false;
@@ -891,6 +895,8 @@ public class GraphHopper implements GraphHopperAPI {
 
         initLocationIndex();
 
+        importPublicTransit();
+
         if (lmFactoryDecorator.isEnabled())
             lmFactoryDecorator.createPreparations(ghStorage, locationIndex);
         loadOrPrepareLM(closeEarly);
@@ -899,6 +905,14 @@ public class GraphHopper implements GraphHopperAPI {
             chFactoryDecorator.createPreparations(ghStorage);
         if (!isCHPrepared())
             prepareCH(closeEarly);
+    }
+
+    protected void registerCustomEncodedValues(EncodingManager.Builder emBuilder) {
+
+    }
+
+    protected void importPublicTransit() {
+
     }
 
     private static final String INTERPOLATION_KEY = "prepare.elevation_interpolation.done";
@@ -936,9 +950,7 @@ public class GraphHopper implements GraphHopperAPI {
         String weightingStr = toLowerCase(hintsMap.getWeighting());
         Weighting weighting = null;
 
-        if (encoder.supports(GenericWeighting.class)) {
-            weighting = new GenericWeighting((DataFlagEncoder) encoder, hintsMap);
-        } else if ("shortest".equalsIgnoreCase(weightingStr)) {
+        if ("shortest".equalsIgnoreCase(weightingStr)) {
             weighting = new ShortestWeighting(encoder);
         } else if ("fastest".equalsIgnoreCase(weightingStr) || weightingStr.isEmpty()) {
             if (encoder.supports(PriorityWeighting.class))
@@ -1075,8 +1087,8 @@ public class GraphHopper implements GraphHopperAPI {
                     if (tmpAlgoFactory instanceof LMAlgoFactoryDecorator.LMRAFactory)
                         chAlgoFactory = ((LMAlgoFactoryDecorator.LMRAFactory) tmpAlgoFactory).getDefaultAlgoFactory();
 
-                    if (chAlgoFactory instanceof PrepareContractionHierarchies) {
-                        CHProfile chProfile = ((PrepareContractionHierarchies) chAlgoFactory).getCHProfile();
+                    if (chAlgoFactory instanceof CHRoutingAlgorithmFactory) {
+                        CHProfile chProfile = ((CHRoutingAlgorithmFactory) chAlgoFactory).getCHProfile();
                         queryGraph = QueryGraph.lookup(ghStorage.getCHGraph(chProfile), qResults);
                         weighting = chProfile.getWeighting();
                     } else {

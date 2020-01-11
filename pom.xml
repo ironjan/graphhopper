@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.graphhopper</groupId>
+    <groupId>com.github.lippertsjan</groupId>
     <artifactId>graphhopper-parent</artifactId>
     <name>GraphHopper Parent Project</name>
     <version>1.0-SNAPSHOT</version>
@@ -89,7 +89,10 @@
         <module>web-api</module>
         <module>web</module>
         <module>client-hc</module>
-        <module>indoor-testing</module>
+        <module>level-extension</module>
+        <module>level-extension-test</module>
+        <module>geocoding</module>
+        <module>graphhopper-extension-core</module>
     </modules>
     <build>
         <plugins>
