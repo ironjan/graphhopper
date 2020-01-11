@@ -34,12 +34,12 @@
         </dependency>
 
         <dependency>
-            <groupId>de.ironjan.graphhopper</groupId>
+            <groupId>com.github.ironjan</groupId>
             <artifactId>level-extension</artifactId>
             <version>0.5</version>
         </dependency>
         <dependency>
-            <groupId>de.ironjan.graphhopper</groupId>
+            <groupId>com.github.ironjan</groupId>
             <artifactId>geocoding</artifactId>
             <version>0.5</version>
         </dependency>

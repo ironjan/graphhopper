@@ -9,12 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.ironjan.graphhopper</groupId>
+    <groupId>com.github.ironjan</groupId>
     <artifactId>geocoding</artifactId>
     <version>0.5</version>
     <dependencies>
         <dependency>
-            <groupId>de.ironjan.graphhopper</groupId>
+            <groupId>com.github.ironjan</groupId>
             <artifactId>graphhopper-extension-core</artifactId>
             <version>0.5</version>
         </dependency>
