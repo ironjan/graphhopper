@@ -2,7 +2,6 @@ package de.ironjan.graphhopper.levelextension;
 
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
-import de.ironjan.graphhopper.extensions_core.Coordinate;
 import de.ironjan.graphhopper.levelextension.routing.LowLevelRouting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

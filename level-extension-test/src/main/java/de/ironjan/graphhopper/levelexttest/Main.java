@@ -4,9 +4,9 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import com.graphhopper.storage.GraphHopperStorage;
 import com.graphhopper.storage.NodeAccess;
-import de.ironjan.graphhopper.extensions_core.Coordinate;
 import de.ironjan.graphhopper.geocoding.Geocoding;
 import de.ironjan.graphhopper.geocoding.Poi;
+import de.ironjan.graphhopper.levelextension.Coordinate;
 import de.ironjan.graphhopper.levelextension.GraphLoader;
 import de.ironjan.graphhopper.levelextension.Routing;
 import de.ironjan.graphhopper.util.DirectoryDeleter;
@@ -130,8 +130,8 @@ public class Main {
     }
 
     private void place_test() {
-        singleTest(new Coordinate("WP", 0, 0, 0), new Coordinate("NP", 2, 2, 0));
-        singleTest(new Coordinate("WP", 0, 0, 0), new Coordinate("EP", 0, 4, 0));
+        singleTest(new Poi("WP", 0, 0, 0), new Poi("NP", 2, 2, 0));
+        singleTest(new Poi("WP", 0, 0, 0), new Poi("EP", 0, 4, 0));
         printTowerNodes();
     }
 
@@ -167,8 +167,8 @@ public class Main {
     private void runFloorTest() {
         printTowerNodes();
 
-        Coordinate ground = new Coordinate("Mid Ground floor", 51.733, 8.7473, 0d);
-        Coordinate minus1 = new Coordinate("Mid Lower floor", 51.733, 8.7473, -1d);
+        Poi ground = new Poi("Mid Ground floor", 51.733, 8.7473, 0d);
+        Poi minus1 = new Poi("Mid Lower floor", 51.733, 8.7473, -1d);
 
         singleTest(ground, minus1);
     }

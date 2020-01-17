@@ -1,4 +1,4 @@
-package de.ironjan.graphhopper.extensions_core;
+package de.ironjan.graphhopper.levelextension;
 
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -6,10 +6,6 @@ import java.util.Scanner;
 
 public class Coordinate {
     public final double lat, lon, lvl;
-
-    public Coordinate(String name, double lat, double lon, double lvl) {
-        this(lat, lon, lvl);
-    }
 
     public Coordinate(double lat, double lon, double lvl) {
         this.lat = lat;

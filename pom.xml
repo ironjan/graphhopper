@@ -82,13 +82,15 @@
         <module>core</module>
         <module>reader-osm</module>
         <module>isochrone</module>
+        <!--
         <module>reader-gtfs</module>
-        <module>tools</module>
-        <module>web-bundle</module>
-        <module>api</module>
         <module>web-api</module>
         <module>web</module>
         <module>client-hc</module>
+        <module>web-bundle</module>
+        -->
+        <module>tools</module>
+        <module>api</module>
         <module>level-extension</module>
         <module>level-extension-test</module>
         <module>geocoding</module>

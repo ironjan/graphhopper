@@ -2,8 +2,8 @@ package de.ironjan.graphhopper.levelexttest;
 
 import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
-import de.ironjan.graphhopper.extensions_core.Coordinate;
 import de.ironjan.graphhopper.geocoding.Poi;
+import de.ironjan.graphhopper.levelextension.Coordinate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
