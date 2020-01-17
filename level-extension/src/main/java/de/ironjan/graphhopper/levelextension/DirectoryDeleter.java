@@ -1,4 +1,4 @@
-package de.ironjan.graphhopper.util;
+package de.ironjan.graphhopper.levelextension;
 
 import org.slf4j.LoggerFactory;
 
@@ -7,7 +7,7 @@ import java.io.File;
 /**
  * From https://www.baeldung.com/java-delete-directory
  */
-public class DirectoryDeleter {
+class DirectoryDeleter {
 
     public static boolean deleteDirectory(String path){
         LoggerFactory.getLogger(DirectoryDeleter.class).debug("Deleting {}...", path);

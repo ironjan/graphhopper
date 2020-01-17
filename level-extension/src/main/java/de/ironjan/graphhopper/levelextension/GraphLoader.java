@@ -3,9 +3,7 @@ package de.ironjan.graphhopper.levelextension;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.reader.osm.GraphHopperOSM;
 import com.graphhopper.routing.util.EncodingManager;
-import com.graphhopper.storage.Graph;
 import de.ironjan.graphhopper.levelextension.graph.FootFlagLevelEncoder;
-import de.ironjan.graphhopper.util.DirectoryDeleter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

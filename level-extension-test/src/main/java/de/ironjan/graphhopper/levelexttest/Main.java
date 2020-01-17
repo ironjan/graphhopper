@@ -9,10 +9,10 @@ import de.ironjan.graphhopper.geocoding.Poi;
 import de.ironjan.graphhopper.levelextension.Coordinate;
 import de.ironjan.graphhopper.levelextension.GraphLoader;
 import de.ironjan.graphhopper.levelextension.Routing;
-import de.ironjan.graphhopper.util.DirectoryDeleter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Main {
@@ -27,7 +27,7 @@ public class Main {
     public static void main(String[] args) {
         String osmFile = args[0];
         String graphFolder = args[1];
-        DirectoryDeleter.deleteDirectory(graphFolder);
+        deleteDirectory(graphFolder);
 
         if(args.length > 2 && "import".equals(args[2])) {
             GraphLoader.importAndExit(osmFile, graphFolder);
@@ -217,4 +217,18 @@ public class Main {
         PathPrinter.print("FootLevel LevelEF", route);
     }
 
+
+        public static boolean deleteDirectory(String path){
+            LoggerFactory.getLogger(Main.class).debug("Deleting {}...", path);
+            return deleteDirectory(new File(path));
+        }
+        public static boolean deleteDirectory(File directoryToBeDeleted) {
+            File[] allContents = directoryToBeDeleted.listFiles();
+            if (allContents != null) {
+                for (File file : allContents) {
+                    deleteDirectory(file);
+                }
+            }
+            return directoryToBeDeleted.delete();
+        }
 }
