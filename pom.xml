@@ -89,6 +89,7 @@
         <module>web</module>
         <module>client-hc</module>
         <module>level-extension</module>
+        <module>level-extension-importer</module>
         <module>geocoding</module>
         <module>graphhopper-extension-core</module>
     </modules>
