@@ -14,6 +14,8 @@ public class WrappedShortestWeighting extends ShortestWeighting {
         super(foot);
     }
 
+    /*
+    previous adaption
     @Override
     public double calcWeight(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
         try{
@@ -23,4 +25,5 @@ public class WrappedShortestWeighting extends ShortestWeighting {
             return Double.MAX_VALUE;
         }
     }
+    */
 }

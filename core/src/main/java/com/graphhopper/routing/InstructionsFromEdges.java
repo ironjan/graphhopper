@@ -512,4 +512,9 @@ public class InstructionsFromEdges implements Path.EdgeVisitor {
         prevInstruction.setTime(weighting.calcEdgeMillis(edge, false) + prevInstruction.getTime());
     }
 
+    /** Added for graphhopper extension */
+    protected Instruction getLastAddedInstruction(){
+        return ways.get(ways.size()-1);
+     }
+
 }
