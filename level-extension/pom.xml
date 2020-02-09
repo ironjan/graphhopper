@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>graphhopper-parent</artifactId>
+        <groupId>de.ironjan.graphhopper</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.ironjan.graphhopper</groupId>
+    <name>GraphHopper Level Extension</name>
+    <artifactId>level-extension</artifactId>
+    <version>0.5</version>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.ironjan.graphhopper</groupId>
+            <artifactId>graphhopper-extension-core</artifactId>
+            <version>0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>de.ironjan.graphhopper</groupId>
+            <artifactId>graphhopper-reader-osm</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+</project>
