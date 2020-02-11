@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Geocoding {
+public class RoomRepo {
     private final HashMap<String, Poi> knownPois = new HashMap<>();
     private List<Geocoding> otherSources = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(Geocoding.class);

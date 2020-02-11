@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 // TODO implement DataReader ?
-public class GeocodingOsmReader {
+public class RoomOsmReader {
 
     private File osmFile;
     private int workerThreads = 2;
