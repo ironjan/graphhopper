@@ -28,9 +28,9 @@ public class RoomOsmReader {
     private HashMap<String, Double> roomLevels = new HashMap<>();
     private List<Poi> discoveredPois = new ArrayList<>();
     // Missing or invalid level
-    private Logger logger = LoggerFactory.getLogger(GeocodingOsmReader.class.getName());
+    private Logger logger = LoggerFactory.getLogger(RoomOsmReader.class.getName());
 
-    GeocodingOsmReader setOsmFile(File osmFile) {
+    RoomOsmReader setOsmFile(File osmFile) {
         this.osmFile = osmFile;
         return this;
     }

@@ -11,8 +11,8 @@ import java.util.List;
 
 public class RoomRepo {
     private final HashMap<String, Poi> knownPois = new HashMap<>();
-    private List<Geocoding> otherSources = new ArrayList<>();
-    private Logger logger = LoggerFactory.getLogger(Geocoding.class);
+    private List<RoomRepo> otherSources = new ArrayList<>();
+    private Logger logger = LoggerFactory.getLogger(RoomRepo.class);
     ;
 
     public Poi getByName(String name) {
@@ -25,7 +25,7 @@ public class RoomRepo {
         }
 
         logger.debug("Delegating to other sources, if any.");
-        for (Geocoding src: otherSources) {
+        for (RoomRepo src: otherSources) {
             Poi potentialResult = src.getByName(name);
             if(potentialResult != null) {
                 return potentialResult;
@@ -42,7 +42,7 @@ public class RoomRepo {
 
         allPoiNames.addAll(knownPois.keySet());
 
-        for (Geocoding source : otherSources) {
+        for (RoomRepo source : otherSources) {
             allPoiNames.addAll(source.getAllNames());
         }
 
@@ -51,15 +51,15 @@ public class RoomRepo {
 
     private int size() {
         int size = knownPois.size();
-        for (Geocoding g :
+        for (RoomRepo g :
                 otherSources) {
             size += g.size();
         }
         return size;
     }
 
-    public void addSource(Geocoding geocoding) {
-        otherSources.add(geocoding);
+    public void addSource(RoomRepo repo) {
+        otherSources.add(repo);
     }
     private void add(Poi poi) {
         knownPois.put(poi.getName(), poi);
@@ -75,29 +75,29 @@ public class RoomRepo {
 
         private static Logger logger = LoggerFactory.getLogger(Loader.class);
 
-        public static Geocoding fromFile(String osmFile) throws IOException {
-            logger.info("Initializing Geocoding class from file {}.", osmFile);
+        public static RoomRepo fromFile(String osmFile) throws IOException {
+            logger.info("Initializing RoomRepo class from file {}.", osmFile);
 
-            GeocodingOsmReader osmReader = new GeocodingOsmReader();
+            RoomOsmReader osmReader = new RoomOsmReader();
             osmReader.setOsmFile(new File(osmFile));
             List<Poi> pois = osmReader.readGraph();
 
             logger.debug("Read file.");
 
-            Geocoding geocoding = new Geocoding();
+            RoomRepo repo = new RoomRepo();
             for (Poi poi : pois) {
-                geocoding.add(poi);
+                repo.add(poi);
             }
 
-            logger.info("Loaded geocoding data with {} pois.", geocoding.size());
+            logger.info("Loaded room data with {} pois into repo.", repo.size());
 
-            return geocoding;
+            return repo;
         }
 
-        public static Geocoding fromPois(Poi... pois) {
-            Geocoding geocoding = new Geocoding();
-            geocoding.addAll(pois);
-            return geocoding;
+        public static RoomRepo fromPois(Poi... pois) {
+            RoomRepo repo = new RoomRepo();
+            repo.addAll(pois);
+            return repo;
         }
 
 
