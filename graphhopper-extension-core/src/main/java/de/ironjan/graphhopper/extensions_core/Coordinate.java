@@ -43,6 +43,7 @@ public class Coordinate {
     public static Coordinate fromString(String s) {
         try {
             Scanner sc = new Scanner(s);
+            sc.useLocale(Locale.US);
             double lat = sc.nextDouble();
             double lon = sc.nextDouble();
             double lvl = sc.nextDouble();
