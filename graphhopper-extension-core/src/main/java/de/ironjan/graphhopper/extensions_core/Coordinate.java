@@ -2,6 +2,7 @@ package de.ironjan.graphhopper.extensions_core;
 
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Coordinate {
@@ -44,6 +45,7 @@ public class Coordinate {
         try {
             Scanner sc = new Scanner(s);
             sc.useLocale(Locale.US);
+            sc.useDelimiter(",");
             double lat = sc.nextDouble();
             double lon = sc.nextDouble();
             double lvl = sc.nextDouble();
@@ -52,5 +54,20 @@ public class Coordinate {
         } catch (NoSuchElementException ignored){
          throw new IllegalArgumentException("The given string is not in the correct format (lat,lon,lvl).");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinate that = (Coordinate) o;
+        return Double.compare(that.lat, lat) == 0 &&
+                Double.compare(that.lon, lon) == 0 &&
+                Double.compare(that.lvl, lvl) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lat, lon, lvl);
     }
 }
