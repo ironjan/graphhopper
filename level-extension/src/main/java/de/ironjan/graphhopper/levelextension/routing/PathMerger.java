@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * This class is based on {@link com.graphhopper.util.PathMerger} and uses an adapted {@link InstructionsFromEdges} class
  * to add information about levels in the instructions.
- *
+ * <p>
  * This class merges multiple {@link Path} objects into one continuous object that
  * can be used in the {@link PathWrapper}. There will be a Path between every waypoint.
  * So for two waypoints there will be only one Path object. For three waypoints there will be
@@ -208,6 +208,18 @@ public class PathMerger extends com.graphhopper.util.PathMerger {
                 if (diff > 179 && diff < 181) {
                     nextInstruction.setSign(Instruction.U_TURN_UNKNOWN);
                 }
+            }
+
+            /* added for level extension */
+            if (instruction.getExtraInfoJSON().containsKey("prevEdgeLevel")
+                    && instruction.getExtraInfoJSON().containsKey("thisEdgeLevel")) {
+
+                double prevEdgeLevel = (double) instruction.getExtraInfoJSON().get("prevEdgeLevel");
+                double thisEdgeLevel = (double) instruction.getExtraInfoJSON().get("thisEdgeLevel");
+
+                String name = instruction.getName();
+
+                instruction.setName("From level " + prevEdgeLevel + " to level " + thisEdgeLevel + ". (" + name + ")");
             }
         }
 
