@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.ironjan.graphhopper</groupId>
+    <groupId>com.github.ironjan.graphhopper</groupId>
     <artifactId>graphhopper-web</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -11,7 +11,7 @@
     <description>Use the GraphHopper routing engine as a web-service</description>
 
     <parent>
-        <groupId>de.ironjan.graphhopper</groupId>
+        <groupId>com.github.ironjan.graphhopper</groupId>
         <artifactId>graphhopper-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -31,7 +31,7 @@
             <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.ironjan.graphhopper</groupId>
+            <groupId>com.github.ironjan.graphhopper</groupId>
             <artifactId>graphhopper-web-bundle</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
@@ -49,7 +49,7 @@
 
         <!-- for integration tests of service -->
         <dependency>
-            <groupId>de.ironjan.graphhopper</groupId>
+            <groupId>com.github.ironjan.graphhopper</groupId>
             <artifactId>directions-api-client-hc</artifactId>
             <version>${project.parent.version}</version>
             <scope>test</scope>
